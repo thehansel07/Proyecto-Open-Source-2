@@ -23,5 +23,24 @@ from SistemaCompraApp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index, name='index'),
+    path('principalMarcas', views.principalMarcas, name='principalMarcas'),
+    path('principalUnidadesdeMedida', views.principalUnidadesdeMedida, name='principalUnidadesdeMedida'),
+    path('principalProveedores', views.principalProveedores, name='principalProveedores'),
+    
+    path('registrarMarcas/', views.registrarMarcas, name='registrarMarcas'),
+    path('registrarUnidadesdeMedida/', views.registrarUnidadesdeMedida, name='registrarUnidadesdeMedida'),
+    path('registrarProveedor/', views.registrarProveedor, name='registrarProveedor'),
+
+    path('eliminarMarcas/<idmarca>', views.eliminarMarcas, name='eliminarMarcas'),
+    path('eliminarUnidades/<idunidadmedida>', views.eliminarUnidades, name='eliminarUnidades'),
+    path('eliminarProveedor/<idproveedor>', views.eliminarProveedor, name='eliminarProveedor'),
+
+    path('edicionMarcas/<idmarca>', views.edicionMarcas, name='edicionMarcas'),
+    path('edicionUnidades/<idunidadmedida>', views.edicionUnidades, name='edicionUnidades'),
+    path('edicionProveedor/<idproveedor>', views.edicionProveedor, name='edicionProveedor'),
+
+    path('editarMarcas/', views.editarMarcas, name='editarMarcas'),
+    path('editarUnidades/', views.editarUnidades, name='editarUnidades'),
+    path('editarProveedor/', views.editarProveedor, name='editarProveedor')
 
 ]
