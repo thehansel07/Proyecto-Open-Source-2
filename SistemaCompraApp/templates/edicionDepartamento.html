@@ -1,0 +1,65 @@
+{% extends "./base.html" %}
+
+{% block title %} Editando Departamentos {% endblock %}
+
+
+{% block body %}
+
+        <div class="col-md-5">
+            <h2>Editando Departamento</h2>
+            <div class="card">
+              <div class="card-body">
+                  <form action="/editarDepartamento/" method="POST" enctype="multipart/form-data">{% csrf_token %}
+
+                      <div class="form-group">
+                          <label for="">ID:</label>
+                          <input type="text"
+                                 name="txtIdDepartamento"
+                                 value="{{departamento.iddepartamento}}"
+                                 class="form-control"
+                                 placeholder="ID"
+                                 readonly>
+                      </div>
+
+
+                      <div class="form-group">
+                          <label for="txtNombreDepartamento">Nombre:</label>
+                          <input type="text"
+                                 name="txtNombreDepartamento"
+                                 value="{{departamento.nombre}}"
+                                 class="form-control"
+                                 placeholder="Nombre"
+                                 minlength="1"
+                                 maxlength="500"
+                                 required>
+                      </div>
+
+                      <br>
+                      <div class="form-group" style="margin-left: 0.4rem">
+                          <div class="form-check">
+                              <input class="form-check-input"
+                                      type="checkbox"
+                                      name="txtEstadoDepartamento"
+                                      id="txtEstadoDepartamento"
+                                      {% if departamento.estado == "1" %}checked{% endif %}>
+                              <label class="form-check-label" for="gridCheck">Estado</label>
+                          </div>
+
+                      </div>
+                      <br>
+                      <div class="form-group">
+                          <button type="submit" class="btn btn-success btn-block text-white">Guardar</button>
+                      </div>
+
+                  </form>
+
+              </div>
+          </div>
+    </div>
+
+{% endblock body %}
+
+
+
+
+

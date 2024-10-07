@@ -1,0 +1,90 @@
+{% extends "./base.html" %}
+
+{% block title %} Editando Departamentos {% endblock %} 
+{% block body %}
+
+<div class="col-md-5">
+  <h2>Editando Empleado</h2>
+  <div class="card">
+    <div class="card-body">
+      <form
+        action="/editarEmpleado/"
+        method="POST"
+        enctype="multipart/form-data"
+      >
+        {% csrf_token %}
+
+        <div class="form-group">
+          <label for="txtEmpleadoId">ID:</label>
+          <input
+            type="text"
+            name="txtEmpleadoId"
+            value="{{empleado.idempleado }}"
+            class="form-control"
+            placeholder="ID"
+            readonly
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="txtEmpleadoCedula">Cedula:</label>
+          <input
+            type="text"
+            name="txtEmpleadoCedula"
+            value="{{empleado.cedula}}"
+            class="form-control"
+            placeholder="Cedula"
+            minlength="1"
+            maxlength="500"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="txtEmpleadoNombre">Nombre:</label>
+          <input
+            type="text"
+            name="txtEmpleadoNombre"
+            value="{{empleado.nombre}}"
+            class="form-control"
+            placeholder="Nombre"
+            minlength="1"
+            maxlength="500"
+            required
+          />
+        </div>
+
+
+        <div class="form-group mb-3">
+            <label for="txtDepartamentoId">Departamento:</label>
+            <select class="form-select"
+                    name="txtDepartamentoId"
+                    id="txtDepartamentoId">
+                <option>--Seleccionar--</option>
+                {% for departamento in departamentos %}
+                    <option selected value="{{ empleado.departamento.iddepartamento }}">{{ departamento.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <br />
+        <div class="form-group" style="margin-left: 0.4rem">
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox"
+            name="txtEmpleadoEstado" id="txtEmpleadoEstado" 
+            {% if empleado.estado == "1" %}checked{% endif %}>
+            <label class="form-check-label" for="gridCheck">Estado</label>
+          </div>
+        </div>
+        <br />
+        <div class="form-group">
+          <button type="submit" class="btn btn-success btn-block text-white">
+            Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+{% endblock body %}

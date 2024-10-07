@@ -23,5 +23,29 @@ from SistemaCompraApp import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index, name='index'),
+    path('principalDepartamentos',views.principalDepartamentos),
+    path('principalEmpleados',views.principalEmpleados),
+
+
+
+
+    path('edicionDepartamento/<iddepartamento>', views.edicionDepartamento, name='edicionDepartamento'),
+    path('edicionEmpleados/<idempleado>', views.edicionEmpleados, name='edicionEmpleados'),
+
+
+    path('editarDepartamento/', views.editarDepartamento, name='editarDepartamento'),
+    path('editarEmpleado/', views.editarEmpleado, name='editarEmpleado'),
+
+
+
+    path('registrarDepartamentos/', views.registrarDepartamentos),
+    path('registrarEmpleado/', views.registrarEmpleado),
+
+    path('eliminarEmpleado/<idempleado>',views.eliminarEmpleado, name='eliminarEmpleado'),
+    path('eliminarDepartamento/<iddepartamento>',views.eliminarDepartamento, name='eliminarDepartamento')
+
+
+
+
 
 ]

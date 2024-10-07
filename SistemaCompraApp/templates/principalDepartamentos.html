@@ -1,0 +1,94 @@
+{% extends "./base.html" %} {% block title %}Sistema de Compras{% endblock %}
+{%block navegacion %}Departamentos{% endblock %} {% block body %}
+
+<div class="row">
+  <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4">
+    <h4>Gestión de Departamentos</h4>
+    <div class="card">
+      <div class="card-body">
+        <form action="/registrarDepartamentos/" method="post">
+          {% csrf_token %}
+
+          <div class="form-group mb-3">
+            <label for="txtNombreDepartamento">Nombre:</label>
+            <input
+              type="text"
+              name="txtNombreDepartamento"
+              id="txtNombreDepartamento"
+              class="form-control"
+              placeholder="Nombre"
+              minlength="1"
+              maxlength="500"
+              required
+            />
+          </div>
+
+          <div class="form-check mb-3">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="txtEstadoDepartamento"
+              id="txtEstadoDepartamento"
+              required
+            />
+
+            <label class="form-check-label" for="txtEstadoDepartamento"
+              >Estado</label
+            >
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-success text-white">
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-6 col-lg-8 col-xl-8">
+    <h3>Listado de Departamentos</h3>
+    <div class="table-responsive py-2">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Estado</th>
+            <th colspan="2">Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for departamento in departamentos %}
+          <tr>
+            <td>{{ departamento.iddepartamento }}</td>
+            <td>{{ departamento.nombre }}</td>
+            <td>
+              {% if departamento.estado == "1" %}
+              <i class="fa-solid fa-circle-check text-success"></i>
+              {% else %}
+              <i class="fa-regular fa-circle-check text-muted"></i>
+              {% endif %}
+            </td>
+            <td>
+              <a href="edicionDepartamento/{{ departamento.iddepartamento }}"
+                class="btn btn-info btn-sm"
+                >Editar</a
+              >
+            </td>
+            <td>
+              <a
+                href="eliminarDepartamento/{{ departamento.iddepartamento }}"
+                class="btn btn-danger btn-sm btnEliminacion"
+                >Eliminar</a
+              >
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

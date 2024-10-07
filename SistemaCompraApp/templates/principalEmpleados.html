@@ -1,0 +1,126 @@
+{% extends "./base.html" %} {% block title %}Sistema de Compras{% endblock %}
+{%block navegacion %}Empleados{% endblock %} {% block body %}
+
+<div class="row">
+  <div class="col-sm-12 mb-4">
+    <h4>Gestión de Empleados</h4>
+    <div class="card">
+      <div class="card-body">
+        <form action="/registrarEmpleado/" method="post">
+          {% csrf_token %}
+
+          <div class="form-group mb-3">
+            <label for="txtCedulaEmpleado">Cedula:</label>
+            <input
+              type="text"
+              name="txtEmpleadoCedula"
+              id="txtEmpleadoCedula"
+              class="form-control"
+              placeholder="Cedula"
+              minlength="1"
+              maxlength="500"
+              required
+            />
+          </div>
+
+          <div class="form-group mb-3"></div>
+            <label for="txtEmpleadoNombre">Nombre:</label>
+            <input
+              type="text"
+              name="txtEmpleadoNombre"
+              id="txtEmpleadoNombre"
+              class="form-control"
+              placeholder="Cedula"
+              minlength="1"
+              maxlength="500"
+              required
+            />
+          </div>
+
+
+          <div class="form-group mb-3">
+            <label for="txtDepartamentoId">Departamentos:</label>
+            <select class="form-select"
+                    name="txtDepartamentoId"
+                    id="txtDepartamentoId">
+                <option selected>--Seleccionar--</option>
+                {% for departamento in departamentos %}
+                    <option value="{{ departamento.iddepartamento }}">{{ departamento.nombre }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+          <div class="form-check mb-3">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="txtEmpleadoEstado"
+              id="txtEmpleadoEstado"
+              required
+            />
+
+            <label class="form-check-label" for="txtEmpleadoEstado"
+              >Estado</label
+            >
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-success text-white">
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-6 col-lg-8 col-xl-8">
+    <h3>Listado de Empleados</h3>
+    <div class="table-responsive py-2">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Cedula</th>
+            <th>Nombre</th>
+            <th>Departamento</th>
+            <th>Estado</th>
+
+            <th colspan="2">Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for empleado in empleados %}
+          <tr>
+            <td>{{ empleado.idempleado }}</td>
+            <td>{{ empleado.cedula }}</td>
+            <td>{{empleado.nombre }}</td>
+            <td>{{ empleado.departamento.nombre }}</td>
+            <td>
+              {% if empleado.estado == "1" %}
+              <i class="fa-solid fa-circle-check text-success"></i>
+              {% else %}
+              <i class="fa-regular fa-circle-check text-muted"></i>
+              {% endif %}
+            </td>
+            <td>
+              <a href="edicionEmpleados/{{ empleado.idempleado }}"
+                class="btn btn-info btn-sm"
+                >Editar</a
+              >
+            </td>
+            <td>
+              <a
+                href="eliminarEmpleado/{{ empleado.idempleado }}"
+                class="btn btn-danger btn-sm btnEliminacion"
+                >Eliminar</a
+              >
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

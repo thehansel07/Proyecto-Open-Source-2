@@ -9,7 +9,7 @@ class Articulos(models.Model):
     marca = models.ForeignKey('Marcas', models.DO_NOTHING, db_column='Marca', blank=True, null=True)  # Field name made lowercase.
     unidadmedida = models.ForeignKey('UnidadesMedida', models.DO_NOTHING, db_column='UnidadMedida', blank=True, null=True)  # Field name made lowercase.   
     existencia = models.IntegerField(db_column='Existencia')  # Field name made lowercase.
-    estado = models.TextField(db_column='Estado')  # Field name made lowercase.
+    estado = models.TextField(db_column='Estado', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -19,7 +19,7 @@ class Articulos(models.Model):
 class Departamentos(models.Model):
     iddepartamento = models.AutoField(db_column='IdDepartamento', primary_key=True, blank=False, null=False)  # Field name made lowercase.
     nombre = models.TextField(db_column='Nombre')  # Field name made lowercase.
-    estado = models.TextField(db_column='Estado')  # Field name made lowercase.
+    estado = models.BooleanField(db_column='Estado', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -31,7 +31,7 @@ class Empleados(models.Model):
     cedula = models.TextField(db_column='Cedula')  # Field name made lowercase.
     nombre = models.TextField(db_column='Nombre')  # Field name made lowercase.
     departamento = models.ForeignKey(Departamentos, models.DO_NOTHING, db_column='Departamento', blank=True, null=True)  # Field name made lowercase.      
-    estado = models.TextField(db_column='Estado')  # Field name made lowercase.
+    estado = models.TextField(db_column='Estado', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -41,7 +41,7 @@ class Empleados(models.Model):
 class Marcas(models.Model):
     idmarca = models.AutoField(db_column='IdMarca', primary_key=True, blank=False, null=False)  # Field name made lowercase.
     descripcion = models.TextField(db_column='Descripcion')  # Field name made lowercase.
-    estado = models.TextField(db_column='Estado')  # Field name made lowercase.
+    estado = models.TextField(db_column='Estado', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -52,7 +52,7 @@ class Proveedores(models.Model):
     idproveedor = models.AutoField(db_column='IdProveedor', primary_key=True, blank=False, null=False)  # Field name made lowercase.
     cedularnc = models.TextField(db_column='CedulaRNC')  # Field name made lowercase.
     nombrecomercial = models.TextField(db_column='NombreComercial')  # Field name made lowercase.
-    estado = models.TextField(db_column='Estado')  # Field name made lowercase.
+    estado = models.TextField(db_column='Estado', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
@@ -62,7 +62,7 @@ class Proveedores(models.Model):
 class UnidadesMedida(models.Model):
     idunidadmedida = models.AutoField(db_column='IdUnidadMedida', primary_key=True, blank=False, null=False)  # Field name made lowercase.
     descripcion = models.TextField(db_column='Descripcion')  # Field name made lowercase.
-    estado = models.TextField(db_column='Estado')  # Field name made lowercase.
+    estado = models.TextField(db_column='Estado', blank=True, null=True)  # Field name made lowercase.
 
     class Meta:
         managed = False
