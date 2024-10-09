@@ -1,0 +1,149 @@
+{% extends "./base.html" %} {% block title %}Sistema de Compras{% endblock %}
+{%block navegacion %}Articulos{% endblock %} 
+{% block body %}
+
+<div class="row">
+  <div class="col-sm-12 col-md-6 col-lg-4 col-xl-4 mb-4">
+    <h4>Gestión de Articulos</h4>
+    <div class="card">
+      <div class="card-body">
+        <form action="/registrarArticulo/" method="post">
+          {% csrf_token %}
+
+          <div class="form-group mb-3">
+            <label for="txtDescripcionArticulos">Descripcion:</label>
+            <input
+              type="text"
+              name="txtDescripcionArticulos"
+              id="txtDescripcionArticulo"
+              class="form-control"
+              placeholder="Descripcion"
+              minlength="1"
+              maxlength="500"
+              required
+            />
+          </div>
+
+          <div class="form-group mb-3">
+            <label for="txtMarcaArticulos">Marcas:</label>
+            <select
+              class="form-select"
+              name="txtMarcaArticulos"
+              id="txtMarcaArticulos"
+            >
+              <option selected>--Seleccionar--</option>
+              {% for marca in marcas %}
+              <option value="{{ marca.idmarca }}">
+                {{ marca.descripcion }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group mb-3">
+            <label for="txtUnidadMedidaArticulos">Unidad de Medida:</label>
+            <select
+              class="form-select"
+              name="txtUnidadMedidaArticulos"
+              id="txtUnidadMedidaArticulos"
+            >
+              <option selected>--Seleccionar--</option>
+              {% for unidad in unidadMedidas %}
+              <option value="{{ unidad.idunidadmedida }}">
+                {{ unidad.descripcion }}
+              </option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <div class="form-group mb-3">
+            <label for="txtExistenciaArticulos">Cantidad Existencia:</label>
+            <input
+              type="number"
+              name="txtExistenciaArticulos"
+              id="txtExistenciaArticulos"
+              class="form-control"
+              placeholder="Cantidad Existencia"
+              minlength="1"
+              maxlength="500"
+              required
+            />
+          </div>
+
+          <div class="form-check mb-3">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              name="txtEstadoArticulo"
+              id="txtEstadoArticulo"
+              required
+            />
+
+            <label class="form-check-label" for="txtEstadoDepartamento"
+              >Estado</label
+            >
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-success text-white">
+              Guardar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-6 col-lg-8 col-xl-8">
+    <h3>Listado de Articulos</h3>
+    <div class="table-responsive py-2">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Descripcion</th>
+            <th>Marcas</th>
+            <th>Unidad Medida</th>
+            <th>Cantidad Existente</th>
+            <th>Estado</th>
+            <th colspan="2">Opciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for articulo in articulos %}
+          <tr>
+            <td>{{ articulo.idarticulo }}</td>
+            <td>{{ articulo.descripcion }}</td>
+            <td>{{ articulo.marca.descripcion }}</td>
+            <td>{{ articulo.unidadmedida.descripcion }}</td>
+            <td>{{ articulo.existencia }}</td>
+
+            <td>
+              {% if articulo.estado == "1" %}
+              <i class="fa-solid fa-circle-check text-success"></i>
+              {% else %}
+              <i class="fa-regular fa-circle-check text-muted"></i>
+              {% endif %}
+            </td>
+            <td>
+              <a
+                href="edicionArticulos/{{ articulo.idarticulo }}"
+                class="btn btn-info btn-sm"
+                >Editar</a
+              >
+            </td>
+            <td>
+              <a
+                href="eliminarArticulo/{{ articulo.idarticulo }}"
+                class="btn btn-danger btn-sm btnEliminacion"
+                >Eliminar</a
+              >
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

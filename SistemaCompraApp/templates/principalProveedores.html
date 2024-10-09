@@ -1,0 +1,94 @@
+{% extends "./base.html" %}
+
+{% block title %}Sistema Gestion de Compras{% endblock %}
+{% block navegacion %}Proveedores{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-sm-12 col-md-8 col-lg-6 col-xl-11 mb-4">
+            <h4>Gestión de Proveedores</h4>
+            <div class="card">
+                <div class="card-body">
+                    <form action="/registrarProveedor/" method="post">{% csrf_token %}
+                        <div class="form-group mb-5">
+                            <label for="txtcedulaProveedor">Cedula:</label>
+                            <input type="text"
+                                   name="txtcedulaProveedor"
+                                   id="txtcedulaProveedor"
+                                   class="form-control"
+                                   placeholder="Cedula"
+                                   minlength="1"
+                                   maxlength="500"
+                                   required>
+                        </div>
+        
+                        <div class="form-group mb-3">
+                            <label for="txtNombreComercialProveedor">Nombre Comercial:</label>
+                            <input type="text"
+                                   name="txtNombreComercialProveedor"
+                                   id="txtNombreComercialProveedor"
+                                   class="form-control"
+                                   placeholder="Nombre Comercial"
+                                   minlength="1"
+                                   maxlength="500"
+                                   required>
+                        </div>
+        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input"
+                                   type="checkbox"
+                                   name="txtEstadoProveedor"
+                                   id="txtEstadoProveedor"
+                                   required>
+                            <label class="form-check-label" for="txtEstadoProveedor">Estado</label>
+                        </div>
+        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success text-white">Guardar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>        
+    </div>
+    
+        <div class="col-sm-12 col-md-6 col-lg-8 col-xl-8">
+            <h3>Listado de Proveedores</h3>
+            <div class="table-responsive py-2">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Cédula</th>
+                            <th>Nombre Comercial</th>
+                            <th>Estado</th>
+                            <th colspan="2">Opciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for provee in proovedor %}
+                            <tr>
+                                <td>{{ provee.idproveedor }}</td>
+                                <td>{{ provee.cedularnc }}</td>
+                                <td>{{ provee.nombrecomercial }}</td>
+                                <td>
+                                    {% if provee.estado == "1" %}
+                                        <i class="fa-solid fa-circle-check text-success"></i>
+                                    {% else %}
+                                        <i class="fa-regular fa-circle-check text-muted"></i>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="edicionProveedor/{{ provee.idproveedor }}" class="btn btn-info btn-sm">Editar</a>
+                                </td>
+                                <td>
+                                    <a href="eliminarProveedor/{{ provee.idproveedor }}" class="btn btn-danger btn-sm btnEliminacion">Eliminar</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+  
+{% endblock %}
