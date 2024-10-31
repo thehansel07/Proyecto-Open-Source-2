@@ -52,9 +52,10 @@
 <div class="wrapper">
     <div class="container-fluid p-0 d-flex h-100 content">
         <div id="bdSidebar" class="d-flex flex-column flex-shrink-0 p-3 bg-dark text-white offcanvas-md offcanvas-start">
-            <a href="/" class="navbar-brand titulo">Sistema de Compra</a>
+            <a href="#" class="navbar-brand titulo">Sistema de Compra</a>
             <hr>
             
+            <span class="nav-link">Bienvenido <b>{{ user.username }}</b></span>
             <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
                 <li class="nav-item mt-2 px-0">
                     <a href="/principalDepartamentos" class="nav-link align-middle px-0">
@@ -97,7 +98,17 @@
                             <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4z"/>
                           </svg> Articulos
                     </a>
-                </li>   
+                </li> 
+                
+    
+                <li class="nav-item mb-1">
+                    <a href="/logout" class="nav-link align-middle px-0">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-box-arrow-in-left" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0z"/>
+                            <path fill-rule="evenodd" d="M4.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H14.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+                          </svg> Logout
+                    </a>
+                </li> 
 
               
             </ul>
