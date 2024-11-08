@@ -1,6 +1,12 @@
 from django.shortcuts import render, redirect
 from .models import Departamentos, Empleados,Marcas, UnidadesMedida, Proveedores,Articulos
 import sweetify # type: ignore
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
+from django.contrib.auth.models import User
+from django.contrib.auth import login, logout, authenticate
+from django.db import IntegrityError
+from django.core.paginator import Paginator,EmptyPage, PageNotAnInteger
+from django.http import Http404
 
 # Create your views here.
 
@@ -10,6 +16,15 @@ def index(request):
 
 def principalDepartamentos(request):
     departamentos = Departamentos.objects.all()
+    page = request.Get.get('page', 1)
+    
+    try:
+        paginator = Paginator(departamentos, 3)
+        departamentos = paginator.page(page)
+ 
+    except:
+        raise Http404
+
 
     return render(request, 'principalDepartamentos.html',{
         'departamentos':departamentos
@@ -101,16 +116,14 @@ def registrarDepartamentos(request):
     estado = request.POST['txtEstadoDepartamento']
 
   #Valid if estado is on or off#
-    if estado == 'on':
+    if estado:
         estado = 1
     else:
         estado = 0
 
-    Departamentos.objects.create(nombre = nombre, estado = estado)
-    sweetify.success(request, 'Departamento Agregada Correctamente!!!')
+    Departamentos.objects.create(nombre = nombre, estado = estado)    
     
-    
-    return redirect('/principalDepartamentos')
+    return redirect('/')
 
 
 
@@ -177,13 +190,50 @@ def registrarEmpleado(request):
     estado = request.POST['txtEmpleadoEstado']
     iddepartamento = request.POST['txtDepartamentoId']
 
-    intance_Departamento = Departamentos.objects.get(iddepartamento = iddepartamento)
+    isvalid = validar_cedula(cedula)
 
+    if isvalid:
+            intance_Departamento = Departamentos.objects.get(iddepartamento = iddepartamento)
+            Empleados.objects.create(cedula = cedula, nombre=nombre, departamento=intance_Departamento, estado=estado)
+            sweetify.success(request, 'Empleado agregado correctamente!!!')
+    else:
+        sweetify.error(request, 'Cedula subministrada no contiene el formato correspondiente!!')
 
-    Empleados.objects.create(cedula = cedula, nombre=nombre, departamento=intance_Departamento, estado=estado)
-    sweetify.success(request, 'Marca Agregada Correctamente!!!')
 
     return redirect('/principalEmpleados')
+
+
+
+
+def validar_cedula(cedula):
+  # La cédula debe tener 11 dígitos
+  if len(cedula)!= 11:
+    return False
+  if (int(cedula[0:3]) != 402 and int(cedula[0:3]) > 121 and int(cedula[0:3]) < 1):
+    return False
+    
+  suma = 0
+  verificador = 0
+  
+  for i, n in enumerate(cedula):
+    #No ejecutar el ultimo digito
+    if( i == len(cedula)-1):
+      break
+    # Los dígitos pares valen 2 y los impares 1
+    multiplicador = 1 if (int(i) % 2) == 0 else 2
+    # Se multiplica cada dígito por su paridad
+    digito = int(n)*int(multiplicador)
+    # Si la multiplicación da de dos dígitos, se suman entre sí
+    digito = digito//10 + digito%10 if(digito>9) else digito
+
+    # Y se va haciendo la acumulación de esa suma
+    suma = suma + digito
+
+  # Al final se obtiene el verificador con la siguiente fórmula
+  verificador = (10 - (suma % 10) ) % 10
+
+  # Se comprueba el verificador
+  return (verificador == int(cedula[-1:]))
 
 def registrarUnidadesdeMedida(request):
     descripcion = request.POST['txtdescripcionUnidadesdeMedida']
@@ -204,8 +254,8 @@ def registrarUnidadesdeMedida(request):
 def eliminarDepartamento(request,iddepartamento):
     departamentos = Departamentos.objects.get(iddepartamento=iddepartamento)
     departamentos.delete()
-    sweetify.success(request, 'Departamento Eliminada Correctamente!!!')
-    return redirect('/principalDepartamentos')
+    sweetify.success(request, 'Departamento Eliminado Correctamente!!!')
+    return redirect('/')
 
 
 def eliminarEmpleado(request,idempleado):
@@ -233,25 +283,14 @@ def edicionDepartamento(request, iddepartamento):
 def editarDepartamento(request):
     iddepartamento  = request.POST['txtIdDepartamento']
     nombre = request.POST['txtNombreDepartamento']
-
-
-    if 'txtEstadoDepartamento' in request.POST:
-        estado = request.POST['txtEstadoDepartamento']
-    else:
-        estado = '0'
-
-    # Valid if estado is on or off#
-    if estado == 'on':
-        estado = 1
-    else:
-        estado = 0
-
+    estado = request.POST['txtEstadoDepartamento']
+    
     departamento = Departamentos.objects.get(iddepartamento = iddepartamento)
-    departamento.estado = estado
     departamento.nombre = nombre
+    departamento.estado = estado
     departamento.save()
 
-    return redirect('/principalDepartamentos')
+    return redirect('/')
 
 def registrarProveedor(request):
     cedularnc = request.POST['txtcedulaProveedor']
@@ -270,6 +309,11 @@ def registrarProveedor(request):
     return redirect('/principalProveedores')
 
 def eliminarMarcas(request,idmarca):
+    print(request.POST['content'])
+    print(request.POST['nombre'])
+
+    print(idmarca)
+
     marca = Marcas.objects.get(idmarca=idmarca)
     marca.delete()
     sweetify.success(request, 'Marca Eliminada Correctamente!!!')
@@ -411,3 +455,103 @@ def edicionProveedor(request, idproveedor):
     return render(request, 'edicionProveedor.html', {'proveedor': proveedor})
 
  
+def signup(request):
+
+    if request.method == 'GET':
+        return render(request, 'signup.html', {
+            'form': UserCreationForm
+        })
+    else:
+        if request.POST['password1'] == request.POST['password2']:
+            try:
+                user = User.objects.create_user(username=request.POST['username'],
+                                                password=request.POST['password1'])
+                user.save()
+                login(request, user)
+                return redirect('/index')
+            except IntegrityError:
+                return render(request, 'signup.html', {
+                    'form': UserCreationForm,
+                    'error': "Username already exists"
+                })
+
+        return render(request, 'signup.html', {
+            'form': UserCreationForm,
+            'error': "Password do not match"
+        })
+
+
+def signout(request):
+    logout(request)
+    return redirect('index1')
+
+
+def signin(request):
+    if request.method == 'GET':
+        return render(request, 'signin.html', {
+            'form': AuthenticationForm
+        })
+
+    else:
+        user = authenticate(
+            request, username=request.POST['username'], password=request.POST['password'])
+    
+        if user is None:
+            return render(request, 'signin.html', {
+                'form': AuthenticationForm,
+                'error': 'Username or password is incorrect'
+            })
+
+        else:
+            login(request, user)
+            return redirect('/index')
+        
+
+def index1(request):
+    return render(request, 'index1.html')
+
+
+
+
+
+##lista paginada en Python
+def lista_departametos(request):
+    lista_departametos = Departamentos.objects.all()
+    paginator = Paginator(lista_departametos, 5)  # Muestra 5 posts por página
+
+    page_number = request.GET.get('page')
+
+    try:
+        page_obj = paginator.page(page_number)
+
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    return render(request, 'lista_departametos.html',{
+        'page_obj':page_obj
+    })
+
+
+
+
+
+
+
+# def principalDepartamentos(request):
+#     departamentos = Departamentos.objects.all()
+#     page = request.Get.get('page', 1)
+    
+#     try:
+#         paginator = Paginator(departamentos, 3)
+#         departamentos = paginator.page(page)
+ 
+#     except:
+#         raise Http404
+
+
+#     return render(request, 'principalDepartamentos.html',{
+#         'departamentos':departamentos
+#     })

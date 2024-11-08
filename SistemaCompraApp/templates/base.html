@@ -11,131 +11,170 @@
     <title>{% block title %}{% endblock %}</title>
 
     <style>
-        .content-centered {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 60vh;
-            text-align: center;
-        }
-        .wrapper {
-            display: flex;
-            flex-direction: column;
-            min-height: 100%;
-        }
-        .content {
-            flex: 1;
+         
+         *{
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+         }
+                 
+         body {
+           margin: 0;
+           font-family: 'Times New Roman', Times, serif;
+
+         }
+         
+         .sidebar {
+           margin: 0;
+           padding: 0;
+           width: 300px;
+           background-color: #333333;
+           position: fixed;
+           height: 100%;
+           overflow: auto;
+           
+         }
+         
+         .sidebar a {
+           display: block;
+           color: white;
+           padding: 16px;
+           text-decoration: none;
+         }
+          
+         .sidebar a.active {
+           background-color: #060606;
+           color: white;
+         }
+         
+         .sidebar a:hover:not(.active) {
+           background-color: #494545;
+           color: white;
+         }
+         
+         div.content {
+           margin-left: 300px;
+           padding: 5px 30px;
+           height: 1000px;
+         }
+         
+         @media screen and (max-width: 700px) {
+           .sidebar {
+             width: 100%;
+             height: auto;
+             position: relative;
+           }
+           .sidebar a {float: left;}
+           div.content {margin-left: 0;}
+         }
+         
+         @media screen and (max-width: 400px) {
+           .sidebar a {
+             text-align: center;
+             float: none;
+           }
+         }
+
+        .spinner {
+          border: 8px solid #bab9b9; /* Fondo claro del spinner */
+          border-top: 8px solid #000000; /* Color del spinner */
+          border-radius: 50%;
+          width: 60px;
+          height: 60px;
+          animation: spin 0.5s linear infinite;
         }
 
-        a {
-            text-decoration: none;
-            color: blue;
-        }
-        .titulo{
-            font-family: 'Times New Roman', Times, serif;
-            margin-left: 10px;
-            font-size: 1.3rem;
-        }
 
-
-        footer {
-            background-color: #343a40;
-            color: white;
-            text-align: center;
-            padding: 1rem 0;
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
         }
+        
+        #loader {
+           position: fixed;
+           top: 50%;
+           left: 50%;
+           transform: translate(-50%, -50%);
+           z-index: 1000; /* Para asegurarnos que esté por encima de otros elementos */
+           display: none; /* Inicialmente oculto */
+         }
+        
     </style>
 </head>
 <body>
+    
+
+    <div class="sidebar">
+        <a class="active" href="/">GESTIÓN DE COMPRAS </a>
+
+        <a href="/principalDepartamentos" class="nav-link align-middle px-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-houses ms-1 d-none d-sm-inline" viewBox="0 0 16 16">
+                <path d="M5.793 1a1 1 0 0 1 1.414 0l.647.646a.5.5 0 1 1-.708.708L6.5 1.707 2 6.207V12.5a.5.5 0 0 0 .5.5.5.5 0 0 1 0 1A1.5 1.5 0 0 1 1 12.5V7.207l-.146.147a.5.5 0 0 1-.708-.708zm3 1a1 1 0 0 1 1.414 0L12 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l1.854 1.853a.5.5 0 0 1-.708.708L15 8.207V13.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 4 13.5V8.207l-.146.147a.5.5 0 1 1-.708-.708zm.707.707L5 7.207V13.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V7.207z"/>
+              </svg> Departamento
+        </a>
 
 
-<div class="wrapper">
-    <div class="container-fluid p-0 d-flex h-100 content">
-        <div id="bdSidebar" class="d-flex flex-column flex-shrink-0 p-3 bg-dark text-white offcanvas-md offcanvas-start">
-            <a href="/" class="navbar-brand titulo">Sistema de Compra</a>
-            <hr>
-            
-            <ul class="nav nav-pills flex-column mb-sm-auto mb-0 align-items-center align-items-sm-start">
-                <li class="nav-item mt-2 px-0">
-                    <a href="/principalDepartamentos" class="nav-link align-middle px-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-houses ms-1 d-none d-sm-inline" viewBox="0 0 16 16">
-                            <path d="M5.793 1a1 1 0 0 1 1.414 0l.647.646a.5.5 0 1 1-.708.708L6.5 1.707 2 6.207V12.5a.5.5 0 0 0 .5.5.5.5 0 0 1 0 1A1.5 1.5 0 0 1 1 12.5V7.207l-.146.147a.5.5 0 0 1-.708-.708zm3 1a1 1 0 0 1 1.414 0L12 3.793V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v3.293l1.854 1.853a.5.5 0 0 1-.708.708L15 8.207V13.5a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 4 13.5V8.207l-.146.147a.5.5 0 1 1-.708-.708zm.707.707L5 7.207V13.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5V7.207z"/>
-                          </svg>
-                          Departamento
-                    </a>
-                </li>
-
-                <li class="nav-item mb-1">
-                    <a href="/principalEmpleados" class="nav-link align-middle px-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-person  ms-1 d-none d-sm-inline" viewBox="0 0 16 16">
-                            <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
-                          </svg> Empleados
-                    </a>
-                </li>
-
-                <li class="nav-item mb-1">
-                    <a href="/principalMarcas" class="nav-link align-middle px-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-sourceforge  ms-1 d-none d-sm-inline" viewBox="0 0 16 16">
-                            <path d="M9.13 8.43c0-2.604-.929-3.79-1.42-4.24a.14.14 0 0 0-.232.123c.095 1.472-1.762 1.84-1.762 4.144v.013c0 1.404 1.065 2.55 2.376 2.55s2.377-1.146 2.377-2.55v-.013c0-.655-.246-1.282-.492-1.745-.055-.096-.191-.055-.178.027.451 1.99-.669 3.217-.669 1.69Z"/>
-                            <path d="M6.303 13.923a.25.25 0 0 1-.164-.068L.061 7.789c-.081-.082-.081-.232 0-.327l6.42-6.407A.3.3 0 0 1 6.63 1h1.844c.109 0 .177.068.204.136a.22.22 0 0 1-.054.246L2.602 7.407a.304.304 0 0 0 0 .436l4.766 4.771c.082.082.082.232 0 .328l-.915.927a.3.3 0 0 1-.15.054m1.216 1.063a.22.22 0 0 1-.15-.382l6.036-6.025a.32.32 0 0 0 .096-.218.27.27 0 0 0-.096-.218l-4.78-4.771c-.082-.082-.082-.232 0-.327l.929-.927a.23.23 0 0 1 .163-.068c.069 0 .11.04.15.081l6.065 6.067c.04.04.068.095.068.163a.23.23 0 0 1-.068.164l-6.42 6.407A.23.23 0 0 1 9.35 15H7.52z"/>
-                          </svg> Marcas
-                    </a>
-                </li>
-
-                <li class="nav-item mb-1">
-                    <a href="/principalUnidadesdeMedida" class="nav-link align-middle px-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-rulers  ms-1 d-none d-sm-inline" viewBox="0 0 16 16">
-                            <path d="M1 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5v-1H2v-1h4v-1H4v-1h2v-1H2v-1h4V9H4V8h2V7H2V6h4V2h1v4h1V4h1v2h1V2h1v4h1V4h1v2h1V2h1v4h1V1a1 1 0 0 0-1-1z"/>
-                          </svg>  Unidades Medidas
-                    </a>
-                </li>
+        <a href="/principalEmpleados" class="nav-link align-middle px-0">
+          <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-workspace" viewBox="0 0 16 16">
+            <path d="M4 16s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-5.95a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+            <path d="M2 1a2 2 0 0 0-2 2v9.5A1.5 1.5 0 0 0 1.5 14h.653a5.4 5.4 0 0 1 1.066-2H1V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v9h-2.219c.554.654.89 1.373 1.066 2h.653a1.5 1.5 0 0 0 1.5-1.5V3a2 2 0 0 0-2-2z"/>
+          </svg> Empleados
+        </a>
 
 
-                <li class="nav-item mb-1">
-                    <a href="/principalArticulos" class="nav-link align-middle px-0">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-bag-fill" viewBox="0 0 16 16">
-                            <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4z"/>
-                          </svg> Articulos
-                    </a>
-                </li>   
+        <a href="/principalMarcas" class="nav-link align-middle px-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-sourceforge  ms-1 d-none d-sm-inline" viewBox="0 0 16 16">
+                <path d="M9.13 8.43c0-2.604-.929-3.79-1.42-4.24a.14.14 0 0 0-.232.123c.095 1.472-1.762 1.84-1.762 4.144v.013c0 1.404 1.065 2.55 2.376 2.55s2.377-1.146 2.377-2.55v-.013c0-.655-.246-1.282-.492-1.745-.055-.096-.191-.055-.178.027.451 1.99-.669 3.217-.669 1.69Z"/>
+                <path d="M6.303 13.923a.25.25 0 0 1-.164-.068L.061 7.789c-.081-.082-.081-.232 0-.327l6.42-6.407A.3.3 0 0 1 6.63 1h1.844c.109 0 .177.068.204.136a.22.22 0 0 1-.054.246L2.602 7.407a.304.304 0 0 0 0 .436l4.766 4.771c.082.082.082.232 0 .328l-.915.927a.3.3 0 0 1-.15.054m1.216 1.063a.22.22 0 0 1-.15-.382l6.036-6.025a.32.32 0 0 0 .096-.218.27.27 0 0 0-.096-.218l-4.78-4.771c-.082-.082-.082-.232 0-.327l.929-.927a.23.23 0 0 1 .163-.068c.069 0 .11.04.15.081l6.065 6.067c.04.04.068.095.068.163a.23.23 0 0 1-.068.164l-6.42 6.407A.23.23 0 0 1 9.35 15H7.52z"/>
+              </svg> Marcas
+        </a>
 
-              
-            </ul>
-  
-        </div>
+        <a href="/principalUnidadesdeMedida" class="nav-link align-middle px-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-rulers  ms-1 d-none d-sm-inline" viewBox="0 0 16 16">
+                <path d="M1 0a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h5v-1H2v-1h4v-1H4v-1h2v-1H2v-1h4V9H4V8h2V7H2V6h4V2h1v4h1V4h1v2h1V2h1v4h1V4h1v2h1V2h1v4h1V1a1 1 0 0 0-1-1z"/>
+              </svg> Unidades Medidas
+        </a>
 
-        <div class="bg-light flex-fill">
-            <div class="p-2 d-md-none d-flex text-white bg-dark">
-                <a href="#" class="text-white" data-bs-toggle="offcanvas" data-bs-target="#bdSidebar">
-                    <i class="fa-solid fa-bars"></i>
-                </a>
-                <span class="ms-3">UNAPEC</span>
+
+        <a href="/principalArticulos" class="nav-link align-middle px-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-bag-fill" viewBox="0 0 16 16">
+                <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1m3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4z"/>
+              </svg> Articulos
+        </a>
+
+
+        <a href="/logout" class="nav-link align-middle px-0">
+            <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-box-arrow-in-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M10 3.5a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v9a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-2a.5.5 0 0 1 1 0v2A1.5 1.5 0 0 1 9.5 14h-8A1.5 1.5 0 0 1 0 12.5v-9A1.5 1.5 0 0 1 1.5 2h8A1.5 1.5 0 0 1 11 3.5v2a.5.5 0 0 1-1 0z"/>
+                <path fill-rule="evenodd" d="M4.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H14.5a.5.5 0 0 1 0 1H5.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+              </svg> Logout
+        </a>
+      </div>
+      
+      <div class="content">
+               <div id="loader">
+                  <div class="spinner"></div>
+              </div>
+
+              <div  style="--bs-breadcrumb-divider:'>';font-size:20px">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/"><i class="fa-solid fa-house"></i></a></li>
+                    <li class="breadcrumb-item">{% block navegacion %}{% endblock %}</li>
+                </ol>
             </div>
-            <div class="p-4">
-                <nav style="--bs-breadcrumb-divider:'>';font-size:14px">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><i class="fa-solid fa-house"></i></li>
-                        <li class="breadcrumb-item">{% block navegacion %}{% endblock %}</li>
-                    </ol>
-                </nav>
-                <hr>
-                <div class="container content-centered">
-                    {% block body %}
-                    {% endblock %}
-                </div>
-            </div>
-        </div>
-    </div>
-    <footer class="fixed-bottom">
-        © 2024 Copyright: UNIVERSIDAD APEC
-    </footer>
-</div>
+              <hr>
+           {% block body %}
+           {% endblock %}
+       </div>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7H4UibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" ></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" ></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/11.6.5/sweetalert2.all.min.js"></script>
 <script src="{% static 'js/gestionMarcas.js' %}"></script>
+<script src="{% static 'js/gestionDepartamentos.js' %}"></script>
+
+
 
 {% load sweetify %}
 {% sweetify %}

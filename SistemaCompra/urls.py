@@ -7,14 +7,16 @@ from SistemaCompraApp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.index, name='index'),
-    path('principalDepartamentos',views.principalDepartamentos),
+    # path('',views.index1, name='index1'),
+    path('index',views.index, name='index'),
+    # path('',views.principalDepartamentos),
     path('principalEmpleados',views.principalEmpleados),
     path('principalArticulos',views.principalArticulos),
     path('principalMarcas', views.principalMarcas, name='principalMarcas'),
     path('principalUnidadesdeMedida', views.principalUnidadesdeMedida, name='principalUnidadesdeMedida'),
     path('principalProveedores', views.principalProveedores, name='principalProveedores'),
-    
+    path('', views.lista_departametos, name='lista_departametos'),
+
 
 
 
@@ -54,6 +56,12 @@ urlpatterns = [
 
     path('editarMarcas/', views.editarMarcas, name='editarMarcas'),
     path('editarUnidades/', views.editarUnidades, name='editarUnidades'),
-    path('editarProveedor/', views.editarProveedor, name='editarProveedor')
+    path('editarProveedor/', views.editarProveedor, name='editarProveedor'),
+
+    path('logout/', views.signout, name='logout'), 
+    path('signin/',views.signin, name="signin"),
+    path('signup/', views.signup, name='signup')
+
+
 
 ]
