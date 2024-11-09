@@ -6,13 +6,19 @@
     <link
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      
     />
+    <link rel="stylesheet" href="../static/css/normalize.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Krub:wght@400;700&family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link rel="icon" href="../static/img/purchase.png">
+
     <title>DashBoard</title>
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-dark">
       <div class="container">
-        <a class="navbar-brand" href="/index1"><b>SMarketSmart</b></a>
+        <a class="navbar-brand" href="/index1"><img src="../static/img/purchase.png" height="50px" width="50px" alt=""></a>
         <button
           class="navbar-toggler"
           type="button"
@@ -59,5 +65,246 @@
     font-family: "Times New Roman", Times, serif;
     color: white !important;
   }
+  :root
+  {
+      --blanco: #ffffff;
+      --oscuro: #212121;
+      --primario: #FFC107;
+      --secudario: #0097A7;
+      --gris: #757575;
+      --grisClaro:#DFE9F3;
+  
+      --fuente-principal:3.8em;
+  
+  }
+
+
+  .hero{
+          background-image: url(../static/img/sistemaCompra.jpg);
+          background-repeat: no-repeat;
+          background-size: cover; /*para tomar el espacio de la pantalla completa*/
+          height: 550px; /* Tamaño de forma vertical */
+          position: relative; /*Posicion padre*/
+          margin-bottom: 2rem;
+      
+      }
+
+      .contenido-hero{
+         position: absolute; /*Hijo, para mantener en la zona correspondiente*/
+         background-color: rgba(0,0,0 , .7); /* Oscurecer la imagen */
+         background-color: rgb(0 0 0 0 / 70%); /*Lo mismo pero de otra forma*/
+         width: 100%; /*Para que contenga el 100% del espacio*/
+         height: 100%;
+         display:flex; /* de izquierda a derecha*/
+         flex-direction: column; /* alineas horizontal*/
+         align-items: center; /* Aliniar los items al centro*/
+         justify-content: center; /* El contenido queda centrado, se puede utilizar vertical y horizantal*/
+        
+        }
+
+        .contenido-hero h2, 
+        .contenido-hero p{
+            color: #fff;
+        
+         }
+
+        .ubicacion{
+          display: flex; /*Centrar  Cotenidos*/
+          align-items: flex-end; /*Alinear con el ultimo parte del items*/
+        
+        }
+
+        .boton{
+           background-color: var(--secudario);
+           color: var(--blanco);
+           padding: 1rem 3rem;
+           margin-top: 1rem;
+           font-size: 0.5rem;
+           text-decoration: none;
+           text-transform: uppercase;
+           font-weight: bold;
+           border-radius: .5rem;
+           width: 50%;
+           text-align: center;
+           border: none;
+        }
+
+         .boton:hover{
+            cursor: pointer;
+        }
+
+        @media (min-width: 768px) {
+            .boton{
+                width: auto;
+        
+            }
+            
+        } 
+
+
+        .contenedor{
+          max-width: 50rem; /*Maximo de Ancho*/
+          margin: 0 auto; /*Mover el contenido al centro*/
+/*        
+        
+           margin-top:0;
+        
+          margin-right:auto ;
+        
+          margin-bottom: 0;
+        
+          margin-left: auto; */
+        }
+
+
+        .sombra
+        {
+         -webkit-box-shadow: 0px 6px 21px 1px rgba(112,112,112,1);
+         -moz-box-shadow: 0px 6px 21px 1px rgba(112,112,112,1);
+         box-shadow: 0px 6px 21px 1px rgba(112,112,112,1);
+     
+         background-color: var(--blanco);
+         padding: 2rem;
+         border-radius: 1rem;
+        
+        }
+
+
+        /** Servicios **/
+/*Colocando responsive el main*/
+@media (min-width: 768px) {
+    .servicios{
+        display: grid; /*Colocar lo de manera  horizontal*/
+        grid-template-columns: repeat(3,1fr); /*Para colocar de manera horinzotal*/
+        column-gap: 1rem; /*Para realizar separacion del grid*/
+    
+    }
+
+    
+}
+
+.servicio{
+    display: flex;/*Mover los items al medio*/
+    flex-direction: column; /*En forma de columnas*/
+    align-items: center; /*Aliniar al centro todo el contenido*/
+
+
+    
+}
+
+.servicio p {
+    line-height: 2; /*interlineado*/
+
+
+
+}
+
+.servicio h3{
+    color: var(--secudario);
+    font-weight: 400;
+    text-align: center;
+
+
+
+}
+
+
+.servicio .iconos{
+    height: 15rem;/*Tamaños*/
+    width: 15rem;
+    background-color: var(--primario);
+    border-radius: 50%;
+    display: flex; /*Centrar lo vertical y horizontal*/
+    justify-content: space-evenly; /* Mover al centro los iconoes*/
+    align-items: center; /*Permite aliniar los icones al centro*/
+
+
+
+}
+/*Contacto*/
+.formulario{
+    background-color: var(--gris);
+    margin: 0 auto; /*Para centrar los elementos*/
+    padding: 1rem; /*Lo hace mas grande desde adentro*/
+    border-radius: 1rem;
+}
+
+.formulario fieldset{
+    border: none;
+}
+
+.formulario legend{
+    text-align: center;    
+    color: var(--primario);
+    text-transform: uppercase; /*Colocar letras en mayuscula*/
+    font-weight: 700;
+    margin-bottom: 2rem; /*Despegar item hacia abajo*/
+
+
+}
+
+body{
+    font-size: 16px; /* 1rem = 10px */
+    font-family: 'Krub', sans-serif;
+    background-image:linear-gradient(to top, var(--grisClaro) 0%, var(--blanco) 100%) ; /*Para realizar degradado en  nuestra pagina web*/
+
+
+}
+
+@media (min-width:768px) {
+    .contenedor-campos{
+        display: grid; /*Para realizar distribucion*/
+        grid-template-columns: repeat(2,1fr); /*Esto nos crea el diseño*/
+        column-gap: 1rem; /*Para separar la columna*/
+        grid-template-rows: 10rem 10rem 16rem;
+    }
+
+    .campo:nth-child(3),
+    .campo:nth-child(4){ /*En caso que halla 3 clase con el mismo nombre con esto podemos seleccionar lo empezando desde 1*/
+     grid-column: 1 / 3 ; /*Mover elmento por columnas*/
+
+    } 
+    
+}
+
+
+.campo{
+    margin-bottom: 1rem;
+
+
+}
+
+.campo label{
+    color: var(--blanco);
+    font-weight: bold;
+    margin-bottom: .5rem; /*Despegar los label*/
+    display: block; /*Despegar*/
+
+}
+
+.input-text{
+    width: 100%; /*Para que tome los input tomen el 100% de el formulario*/
+    padding: 1.5rem; /*Para aumentar tamaño del los input*/
+    border-radius: .5rem; /*Redondear input*/
+
+
+
+}
+
+.campo textarea{
+    height: 15rem;
+
+
+
+}
+
+
+h1,h2,h3{
+    text-align: center;
+
+
+}
+
+
 
 </style>

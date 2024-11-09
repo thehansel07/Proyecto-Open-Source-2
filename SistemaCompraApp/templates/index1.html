@@ -10,16 +10,192 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
     <link rel="stylesheet" href="styles.css" />
-    <link rel="icon" type="https://cdn.sstatic.net/Sites/es/img/apple-touch-icon.png?v=7739871010e6">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Krub:wght@400;700&family=Roboto:wght@300&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="icon"
+      type="https://cdn.sstatic.net/Sites/es/img/apple-touch-icon.png?v=7739871010e6"
+    />
 
     <title>Sistema de Compras</title>
   </head>
   <body>
     {% block content %}
 
-    <div class="container text-center my-5">
-      <h1 class="display-4">Bienvenido al Sistema de Compras UNAPEC</h1>
-    </div>
+    <section class="hero">
+      <div class="contenido-hero">
+        <h2>SISTEMA DE COMPRAS</h2>
+
+        <div class="ubicacion">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="icon icon-tabler icon-tabler-map-pin"
+            width="88"
+            height="88"
+            viewBox="0 0 24 24"
+            stroke-width="2"
+            stroke="#ffec00"
+            fill="none"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <circle cx="12" cy="11" r="3" />
+            <path
+              d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z"
+            />
+          </svg>
+
+          <p>Rep.Dom, Santo Domingo</p>
+        </div>
+        <a class="boton" href="#">Contactar</a>
+      </div>
+    </section>
+
+    <main class="contenedor sombra">
+      <h2>Nuestros Servicios</h2>
+
+      <div class="servicios">
+        <section class="servicio">
+          <h3>Gestión de Marcas</h3>
+
+          <div class="iconos">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="70"
+              height="70"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="icon icon-tabler icons-tabler-outline icon-tabler-brand-nem"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path
+                d="M12.182 2c1.94 .022 3.879 .382 5.818 1.08l.364 .135a23.075 23.075 0 0 1 3.636 1.785c0 5.618 -1.957 10.258 -5.87 13.92c-1.24 1.239 -2.5 2.204 -3.78 2.898l-.35 .182c-1.4 -.703 -2.777 -1.729 -4.13 -3.079c-3.912 -3.663 -5.87 -8.303 -5.87 -13.921c2.545 -1.527 5.09 -2.471 7.636 -2.832l.364 -.048a16.786 16.786 0 0 1 1.818 -.12h.364z"
+              />
+              <path
+                d="M2.1 7.07c2.073 6.72 5.373 7.697 9.9 2.93c0 -4 1.357 -6.353 4.07 -7.06l.59 -.11"
+              />
+              <path d="M16.35 18.51s2.65 -5.51 -4.35 -8.51" />
+            </svg>
+          </div>
+
+          <p>
+            Crear un diseño de logo que refleje la esencia de la marca, junto
+            con una paleta de colores, tipografía y otros elementos visuales que
+            representen su personalidad.
+          </p>
+        </section>
+
+        <section class="servicio">
+          <h3>Gestión de Proveedores</h3>
+
+          <div class="iconos">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="70"
+              height="70"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              class="icon icon-tabler icons-tabler-filled icon-tabler-versions"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path
+                d="M18 4h-6a3 3 0 0 0 -3 3v10a3 3 0 0 0 3 3h6a3 3 0 0 0 3 -3v-10a3 3 0 0 0 -3 -3z"
+              />
+              <path
+                d="M7 6a1 1 0 0 1 .993 .883l.007 .117v10a1 1 0 0 1 -1.993 .117l-.007 -.117v-10a1 1 0 0 1 1 -1z"
+              />
+              <path
+                d="M4 7a1 1 0 0 1 .993 .883l.007 .117v8a1 1 0 0 1 -1.993 .117l-.007 -.117v-8a1 1 0 0 1 1 -1z"
+              />
+            </svg>
+          </div>
+
+          <p>
+            Facilita la búsqueda y selección de proveedores adecuados para los
+            productos o servicios necesarios.
+          </p>
+        </section>
+
+        <section class="servicio">
+          <h3>Control de Inventarios</h3>
+
+          <div class="iconos">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="70"
+              height="70"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="icon icon-tabler icons-tabler-outline icon-tabler-circle-dashed-check"
+            >
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M8.56 3.69a9 9 0 0 0 -2.92 1.95" />
+              <path d="M3.69 8.56a9 9 0 0 0 -.69 3.44" />
+              <path d="M3.69 15.44a9 9 0 0 0 1.95 2.92" />
+              <path d="M8.56 20.31a9 9 0 0 0 3.44 .69" />
+              <path d="M15.44 20.31a9 9 0 0 0 2.92 -1.95" />
+              <path d="M20.31 15.44a9 9 0 0 0 .69 -3.44" />
+              <path d="M20.31 8.56a9 9 0 0 0 -1.95 -2.92" />
+              <path d="M15.44 3.69a9 9 0 0 0 -3.44 -.69" />
+              <path d="M9 12l2 2l4 -4" />
+            </svg>
+          </div>
+
+          <p>
+            El sistema permite actualizar automáticamente los inventarios de la empresa cuando se realiza una compra.
+          </p>
+        </section>
+      </div>
+      <!--.servicios-->
+
+      <section>
+        <h2>Contactos</h2>
+
+        <form class="formulario" action="">
+          <fieldset>
+            <legend>Contactanos llenado todos los campos</legend>
+
+            <div class="contenedor-campos">
+              <div class="campo">
+                <label for="">Nombre</label>
+                <input class="input-text" type="text" placeholder="Nombre" />
+              </div>
+
+              <div class="campo">
+                <label for="">Telefono</label>
+                <input class="input-text" type="tel" placeholder="Telefono" />
+              </div>
+
+              <div class="campo">
+                <label for="">Correo</label>
+                <input class="input-text" type="email" placeholder="Correo" />
+              </div>
+
+              <div class="campo">
+                <label for="">Mensaje</label>
+                <textarea class="input-text"></textarea>
+              </div>
+            </div>
+            <!--.Contenedor-Campos-->
+
+            <div class="alinear-derecha flex">
+              <input class="boton w-sm-100" type="submit" value="Enviar" />
+            </div>
+          </fieldset>
+        </form>
+      </section>
+    </main>
 
     {% endblock %}
   </body>

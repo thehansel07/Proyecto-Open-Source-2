@@ -1,5 +1,5 @@
 {% extends 'base1.html' %} {% block content %}
-<main class="container">
+<main class="container form">
   <div class="row">
     <div class="col-md-4 offset-md-4">
       <form method="POST" class="card card-body mt-5">
@@ -43,9 +43,11 @@
 
         <button class="btn btn-primary">Sign Up</button>
 
-        <span style="color: red;" class="text-center mt-2">{{error}}</span>
+        <span style="color: red;" class="text-center mt-5">{{error}}</span>
 
       </form>
+      <br><br><br><br>
+      
     </div>
   </div>
 </main>
