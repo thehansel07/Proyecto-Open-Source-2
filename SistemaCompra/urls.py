@@ -7,15 +7,20 @@ from SistemaCompraApp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('',views.index1, name='index1'),
-    path('index',views.index, name='index'),
+    path('index1',views.index1, name='index1'),
+    path('',views.index, name='index'),
+
+
+    # Section of report
+    path('generateReportDepartment',views.generateReportDepartment, name='generateReportDepartment'),
+
     # path('',views.principalDepartamentos),
     path('principalEmpleados',views.principalEmpleados),
     path('principalArticulos',views.principalArticulos),
     path('principalMarcas', views.principalMarcas, name='principalMarcas'),
     path('principalUnidadesdeMedida', views.principalUnidadesdeMedida, name='principalUnidadesdeMedida'),
     path('principalProveedores', views.principalProveedores, name='principalProveedores'),
-    path('', views.lista_departametos, name='lista_departametos'),
+    path('lista_departametos', views.lista_departametos, name='lista_departametos'),
 
 
 
