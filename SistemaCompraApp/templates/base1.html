@@ -171,42 +171,33 @@
 
 
         /** Servicios **/
-/*Colocando responsive el main*/
-@media (min-width: 768px) {
-    .servicios{
-        display: grid; /*Colocar lo de manera  horizontal*/
-        grid-template-columns: repeat(3,1fr); /*Para colocar de manera horinzotal*/
-        column-gap: 1rem; /*Para realizar separacion del grid*/
-    
-    }
+        /*Colocando responsive el main*/
+        @media (min-width: 768px) {
+            .servicios{
+                display: grid; /*Colocar lo de manera  horizontal*/
+                grid-template-columns: repeat(3,1fr); /*Para colocar de manera horinzotal*/
+                column-gap: 1rem; /*Para realizar separacion del grid*/
+            
+            }
+        
+            
+        }
+        
+        .servicio{
+          display: flex;/*Mover los items al medio*/
+          flex-direction: column; /*En forma de columnas*/
+          align-items: center; /*Aliniar al centro todo el contenido*/
+        }
 
-    
-}
+        .servicio p {
+            line-height: 2; /*interlineado*/
+        }
 
-.servicio{
-    display: flex;/*Mover los items al medio*/
-    flex-direction: column; /*En forma de columnas*/
-    align-items: center; /*Aliniar al centro todo el contenido*/
-
-
-    
-}
-
-.servicio p {
-    line-height: 2; /*interlineado*/
-
-
-
-}
-
-.servicio h3{
-    color: var(--secudario);
-    font-weight: 400;
-    text-align: center;
-
-
-
-}
+  .servicio h3{
+     color: var(--secudario);
+     font-weight: 400;
+     text-align: center; 
+   } 
 
 
 .servicio .iconos{
@@ -304,6 +295,14 @@ h1,h2,h3{
 
 
 }
+
+
+
+.footer{
+    text-align: center;
+    margin-top: 1rem;
+}
+
 
 
 
