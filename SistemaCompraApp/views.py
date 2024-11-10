@@ -24,19 +24,33 @@ def index(request):
 
 
 def principalDepartamentos(request):
-    departamentos = Departamentos.objects.all()
-    page = request.Get.get('page', 1)
+    query = request.GET.get('q', '')
+    lista_departametos = Departamentos.objects.all()
+
+
+    if query != '':
+        lista_departametos = lista_departametos.filter(nombre=query) 
+        query = ''
+
+
+    paginator = Paginator(lista_departametos, 5) 
+
+    page_number = request.GET.get('page')
 
     try:
-        paginator = Paginator(departamentos, 3)
-        departamentos = paginator.page(page)
+        lista_departametos = paginator.page(page_number)
 
-    except:
-        raise Http404
+    except PageNotAnInteger:
+        lista_departametos = paginator.page(1)
+
+    except EmptyPage:
+        lista_departametos = paginator.page(paginator.num_pages)
 
     return render(request, 'principalDepartamentos.html', {
-        'departamentos': departamentos
+        'page_obj': lista_departametos,
+        'query': query
     })
+
 
 
 def principalEmpleados(request):

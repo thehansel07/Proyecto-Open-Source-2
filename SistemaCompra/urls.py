@@ -14,7 +14,7 @@ urlpatterns = [
     # Section of report
     path('generateReportDepartment',views.generateReportDepartment, name='generateReportDepartment'),
 
-    # path('',views.principalDepartamentos),
+    path('principalDepartamentos',views.principalDepartamentos, name='principalDepartamentos'),
     path('principalEmpleados',views.principalEmpleados),
     path('principalArticulos',views.principalArticulos),
     path('principalMarcas', views.principalMarcas, name='principalMarcas'),
