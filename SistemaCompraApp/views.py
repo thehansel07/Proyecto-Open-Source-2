@@ -166,13 +166,35 @@ def principalProveedores(request):
 
 
 def principalArticulos(request):
-    listadoArticulos = Articulos.objects.all()
-    listadoMarcas = Marcas.objects.all()
-    listadoUnidadMedida = UnidadesMedida.objects.all()
+    query = request.GET.get('q', '')
+    listado_articulos = Articulos.objects.all()
+    listado_marcas = Marcas.objects.all()
+    listado_unidad_medida = UnidadesMedida.objects.all()
 
-    return render(request, 'principalArticulos.html', {'articulos': listadoArticulos,
-                                                       'marcas': listadoMarcas,
-                                                       'unidadMedidas': listadoUnidadMedida})
+    if query != '':
+        listado_articulos = listado_articulos.filter(descripcion__icontains=query) 
+        query = ''
+
+    paginator = Paginator(listado_articulos, 5) 
+
+    page_number = request.GET.get('page')
+
+    try:
+        listado_articulos = paginator.page(page_number)
+
+    except PageNotAnInteger:
+        listado_articulos = paginator.page(1)
+
+    except EmptyPage:
+        listado_articulos = paginator.page(paginator.num_pages)
+
+    return render(request, 'principalArticulos.html', {
+        'page_obj': listado_articulos,
+        'listado_marcas': listado_marcas,
+        'listado_unidad_medida': listado_unidad_medida,
+        'query': query,
+    })
+    
 
 
 def edicionArticulos(request, idarticulo):
@@ -189,21 +211,12 @@ def editarArticulos(request):
     id_unidadmedida = request.POST['txtUnidadMedidaArticulos']
     existencia = request.POST['txtExistenciaArticulos']
     idmarca = request.POST['txtMarcaArticulos']
+    estado = request.POST['txtEstadoArticulo']
 
     instance_marca = Marcas.objects.get(idmarca=idmarca)
+
     instance_unidadMedida = UnidadesMedida.objects.get(
         idunidadmedida=id_unidadmedida)
-
-    if 'txtEstadoArticulo' in request.POST:
-        estado = request.POST['txtEstadoArticulo']
-    else:
-        estado = '0'
-
-    # Valid if estado is on or off#
-    if estado == 'on':
-        estado = 1
-    else:
-        estado = 0
 
     articulo = Articulos.objects.get(idarticulo=idarticulo)
     articulo.estado = estado
@@ -390,7 +403,6 @@ def eliminarProveedor(request, idproveedor):
 def eliminarArticulo(request, idarticulo):
     articulo = Articulos.objects.get(idarticulo=idarticulo)
     articulo.delete()
-    sweetify.success(request, 'Articulo Eliminado Correctamente!!!')
     return redirect('/principalArticulos')
 
 
