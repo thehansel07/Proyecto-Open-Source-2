@@ -206,6 +206,7 @@ def edicionArticulos(request, idarticulo):
 
 
 def editarArticulos(request):
+    
     idarticulo = request.POST['txtIdArticulos']
     descripcion = request.POST['txtDescripcionArticulos']
     id_unidadmedida = request.POST['txtUnidadMedidaArticulos']
@@ -214,9 +215,7 @@ def editarArticulos(request):
     estado = request.POST['txtEstadoArticulo']
 
     instance_marca = Marcas.objects.get(idmarca=idmarca)
-
-    instance_unidadMedida = UnidadesMedida.objects.get(
-        idunidadmedida=id_unidadmedida)
+    instance_unidadMedida = UnidadesMedida.objects.get(idunidadmedida=id_unidadmedida)
 
     articulo = Articulos.objects.get(idarticulo=idarticulo)
     articulo.estado = estado

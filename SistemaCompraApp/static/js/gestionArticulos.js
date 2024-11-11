@@ -2,57 +2,59 @@ function getArticleAddForm() {
   $("#builtArticleAdd").modal("show");
 }
 
-function getArticleUpdateForm(id, cedula, nombre, iddepartamento, estado) {
-  $("#builtUpdateEmployees").modal("show");
-
-  document.getElementById("txtIdEmpleadoUpdate").value = id;
-  document.getElementById("txtCedulaEmpleadoUpdate").value = cedula;
-  document.getElementById("txtNombreEmpleadoUpdate").value = nombre;
-  document.getElementById("txtDepartamentoIdUpdate").value = iddepartamento;
-  document.getElementById("txtEstadoEmpleadoUpdate").checked =
-    estado == "1" ? true : false;
+function getArticleUpdateForm(id, descripcion, marca, unidadMedida,existencia, estado) {
+  $("#builtUpdateArticle").modal("show");
+  document.getElementById("txtIdArticulosUpdate").value = id;
+  document.getElementById("txtDescripcionArticulosUpdate").value = descripcion;
+  document.getElementById("txtMarcaArticulosUpdate").value = marca;
+  document.getElementById("txtUnidadMedidaArticulosUpdate").value = unidadMedida;
+  document.getElementById("txtExistenciaArticulosUpdate").value = existencia;
+  document.getElementById("txtEstadoArticuloUpdate").checked = estado == "1" ? true : false;
 }
 
-function updateEmployees() {
-  const element = document.getElementById("myButtonUpdate");
-  let id = document.getElementById("txtIdEmpleadoUpdate").value;
-  let nombre = document.getElementById("txtNombreEmpleadoUpdate").value;
-  let cedula = document.getElementById("txtCedulaEmpleadoUpdate").value;
-  let iddepartamento = document.getElementById("txtDepartamentoIdUpdate").value;
-  let estado =
-    document.getElementById("txtEstadoEmpleadoUpdate").checked == true ? 1 : 0;
+function updateArticle() {
+  const element = document.getElementById("myButtonUpdateArticle");
+  var id = document.getElementById("txtIdArticulosUpdate").value
+  var descripcion = document.getElementById("txtDescripcionArticulosUpdate").value;
+  var marca = document.getElementById("txtMarcaArticulosUpdate").value;
+  var unidadMedida = document.getElementById("txtUnidadMedidaArticulosUpdate").value;
+  var existencia = document.getElementById("txtExistenciaArticulosUpdate").value;
+  var estado = document.getElementById("txtEstadoArticuloUpdate").checked == true ? "1" : "0";;
   const csrftoken = getCookie("csrftoken");
 
-  let validate = ValidateEmployees(cedula, nombre, iddepartamento, estado, 1);
+  let validate = ValidateArticle(descripcion, unidadMedida, marca, existencia, estado, 1);
 
   if (validate) {
     element.setAttribute("data-dismiss", "modal");
     $.ajax({
       type: "POST",
-      url: "/editarEmpleado/",
+      url: "/editarArticulos/",
       data: {
-        txtEmpleadoId: id,
-        txtEmpleadoNombre: nombre,
-        txtEmpleadoEstado: estado,
-        txtEmpleadoCedula: cedula,
-        txtDepartamentoId: iddepartamento,
+        txtIdArticulos: id,
+        txtDescripcionArticulos: descripcion,
+        txtMarcaArticulos: marca,
+        txtUnidadMedidaArticulos: unidadMedida,
+        txtExistenciaArticulos: existencia,
+        txtEstadoArticulo: estado,
         csrfmiddlewaretoken: csrftoken,
       },
       beforeSend: function () {
         $("#loader").fadeIn();
       },
       success: function (data) {
-        document.getElementById("txtNombreEmpleadoUpdate").value = "";
-        document.getElementById("txtCedulaEmpleadoUpdate").value = "";
-        document.getElementById("txtDepartamentoIdUpdate").value = "";
-        document.getElementById("txtEstadoEmpleadoUpdate").checked = "";
+         document.getElementById("txtIdArticulosUpdate").value = "";
+         document.getElementById("txtDescripcionArticulosUpdate").value = "";
+         document.getElementById("txtMarcaArticulosUpdate").value = "";
+         document.getElementById("txtUnidadMedidaArticulosUpdate").value = "";
+         document.getElementById("txtExistenciaArticulosUpdate").value = 0;
+         document.getElementById("txtEstadoArticuloUpdate").checked = false;
         setTimeout(function () {
           $("#loader").fadeOut();
 
           Swal.fire({
             position: "center",
             icon: "success",
-            title: "Empleado Actualizado correctamente...",
+            title: "Articulo Actualizado correctamente...",
             showConfirmButton: false,
           });
 
@@ -75,6 +77,10 @@ function updateEmployees() {
   }
 }
 
+
+
+
+
 function printReport() {
   const csrftoken = getCookie("csrftoken");
   $.ajax({
@@ -89,7 +95,6 @@ function printReport() {
     success: function (data) {
       setTimeout(function () {
         const decodedBytes = base85.decode(data); // Decodifica la cadena Base85 a bytes binarios
-
         var blob = new Blob([decodedBytes], { type: "application/pdf" });
         var pdfurl = window.URL.createObjectURL(blob);
         $("#pdfviewer").attr("data", pdfurl);
@@ -107,24 +112,34 @@ function printReport() {
   });
 }
 
-function saveArticle() {
+
+function saveArticleNewDos() {
+   
+   const element = document.getElementById("myButtonAddingArticle");
+   let descripcion = document.getElementById("txtDescripcionArticulos").value;
+   let unidadMedida = document.getElementById("txtUnidadMedidaArticulos").value;
+   let marca = document.getElementById("txtMarcaArticulos").value;
+   let existencia = document.getElementById("txtExistenciaArticulos").value;
+   let estado = document.getElementById("txtEstadoArticulo").checked == true ? "1" : "0";
+   const csrftoken = getCookie("csrftoken");
+
+
+    let validate = ValidateArticle(descripcion,unidadMedida,marca,existencia,estado,0);
+
+  alert("Probando nuevamente");
+
+}
+
+function saveArticleNew() {
   const element = document.getElementById("myButtonAddingArticle");
   let descripcion = document.getElementById("txtDescripcionArticulos").value;
   let unidadMedida = document.getElementById("txtUnidadMedidaArticulos").value;
   let marca = document.getElementById("txtMarcaArticulos").value;
   let existencia = document.getElementById("txtExistenciaArticulos").value;
-  let estado =
-    document.getElementById("txtEstadoArticulo").checked == true ? "1" : "0";
+  let estado = document.getElementById("txtEstadoArticulo").checked == true ? "1" : "0";
   const csrftoken = getCookie("csrftoken");
 
-  let validate = ValidateArticle(
-    descripcion,
-    unidadMedida,
-    marca,
-    existencia,
-    estado,
-    0
-  );
+  let validate = ValidateArticle(descripcion,unidadMedida,marca,existencia,estado,0);
 
   if (validate) {
     element.setAttribute("data-dismiss", "modal");
@@ -137,7 +152,7 @@ function saveArticle() {
         txtExistenciaArticulos: existencia,
         txtMarcaArticulos: marca,
         txtEstadoArticulo: estado,
-        csrfmiddlewaretoken: csrftoken,
+        csrfmiddlewaretoken: csrftoken
       },
       beforeSend: function () {
         $("#loader").fadeIn();
@@ -147,9 +162,7 @@ function saveArticle() {
         document.getElementById("txtUnidadMedidaArticulos").value = "";
         document.getElementById("txtMarcaArticulos").value = "";
         document.getElementById("txtExistenciaArticulos").value = "";
-        document.getElementById("txtEstadoArticulo").checked == true
-          ? "1"
-          : "0";
+        document.getElementById("txtEstadoArticulo").checked == true? "1": "0";
         setTimeout(function () {
           $("#loader").fadeOut();
 
@@ -180,14 +193,9 @@ function saveArticle() {
   }
 }
 
-function ValidateArticle(
-  descripcion,
-  unidadMedida,
-  marca,
-  existencia,
-  estado,
-  type
-) {
+function ValidateArticle(descripcion,unidadMedida,marca,existencia,estado,type) 
+{
+
   if (type == 0) {
     if (
       descripcion == "" ||
@@ -275,38 +283,4 @@ function getCookie(name) {
     }
   }
   return cookieValue;
-}
-
-function validate_cedula(ced) {
-  var c = ced.replace(/-/g, "");
-  var cedula = c.substr(0, c.length - 1);
-  var verificador = c.substr(c.length - 1, 1);
-  var suma = 0;
-  var cedulaValida = 0;
-  if (ced.length < 11) {
-    return false;
-  }
-  for (i = 0; i < cedula.length; i++) {
-    mod = "";
-    if (i % 2 == 0) {
-      mod = 1;
-    } else {
-      mod = 2;
-    }
-    res = cedula.substr(i, 1) * mod;
-    if (res > 9) {
-      res = res.toString();
-      uno = res.substr(0, 1);
-      dos = res.substr(1, 1);
-      res = eval(uno) + eval(dos);
-    }
-    suma += eval(res);
-  }
-  el_numero = (10 - (suma % 10)) % 10;
-  if (el_numero == verificador && cedula.substr(0, 3) != "000") {
-    cedulaValida = true;
-  } else {
-    cedulaValida = false;
-  }
-  return cedulaValida;
 }

@@ -50,9 +50,9 @@
 
                           
                           <div class="col-md-6 mt-2">
-                            <label for="txtMarcaArticulos ">Marca:</label>
+                            <label for="txtMarcaArticulos">Marca:</label>
                             <select class="form-select"
-                                    name="txtMarcaArticulos "
+                                    name="txtMarcaArticulos"
                                     data-validation="required"
                                     data-validation-error-msg="Marca es un campo requerido"
                                     id="txtMarcaArticulos">
@@ -67,7 +67,7 @@
                         <div class="col-md-6 mt-2">
                           <label for="txtUnidadMedidaArticulos ">Unidad Medida:</label>
                           <select class="form-select"
-                                  name="txtUnidadMedidaArticulos "
+                                  name="txtUnidadMedidaArticulos"
                                   data-validation="required"
                                   data-validation-error-msg="Marca es un campo requerido"
                                   id="txtUnidadMedidaArticulos">
@@ -107,8 +107,9 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="modal-footer">
-                    <button type="button" onclick="saveArticle()" class="btn btn-primary" id="myButtonAddingArticle">Guardar</button>
+                    <button type="button" onclick="saveArticleNewDos()" class="btn btn-primary" id="myButtonAddingArticle">Guardar</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -122,7 +123,7 @@
 <!-- Actualizando -->
   
 <div class="container"> 
-  <div class="modal fade" role="dialog" id="builtUpdateEmployees" style="margin-left:0px">
+  <div class="modal fade" role="dialog" id="builtUpdateArticle" style="margin-left:0px">
       <div class="modal-dialog modal-lg">
           <div class="modal-content">
               <div class="modal-header">
@@ -131,81 +132,95 @@
                     <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
                   </svg>
                 </button>
-                  <h4 class="modal-title">Actualizando Empleado</h4>
+                  <h4 class="modal-title">Actualizando Articulo</h4>
               </div>
+
               <div class="modal-body">
                 <div class="row">
-                    <div class="form-group">
-
-                      <div class="col-md-6">
-                        <label>ID</label>
-                        <input id="txtIdEmpleadoUpdate"
-                               autofocus type="text"
-                               data-validation="required"
-                               data-validation-error-msg="Id es un campo requerido"
-                               autocomplete="off"
-                               class="form-control" 
-                               disabled/>
-                       </div>
-
-
-                      <div class="col-md-6">
-                        <label>Cedula</label>
-                        <input id="txtCedulaEmpleadoUpdate"
-                               autofocus type="text"
-                               data-validation="required"
-                               data-validation-error-msg="Cedula es un campo requerido"
-                               autocomplete="off"
-                               class="form-control" />
-                       </div>
-
+                  <div class="form-group">
 
                         <div class="col-md-6">
-                            <label>Nombre</label>
-                            <input id="txtNombreEmpleadoUpdate"
-                                   autofocus type="text"
-                                   data-validation="required"
-                                   data-validation-error-msg="Nombre es un campo requerido"
-                                   autocomplete="off"
-                                   class="form-control" />
-                        </div>
+                          <label>ID</label>
+                          <input id="txtIdArticulosUpdate"
+                                 autofocus type="text"
+                                 data-validation="required"
+                                 data-validation-error-msg="Id es un campo requerido"
+                                 autocomplete="off"
+                                 class="form-control" 
+                                 disabled/>
+                         </div>
 
 
-                      
-                      <div class="col-md-6 mt-2">
-                        <label for="txtDepartamentoId">Departamentos:</label>
-                        <select class="form-select"
-                                name="txtDepartamentoId"
-                                data-validation="required"
-                                data-validation-error-msg="Departamentos es un campo requerido"
-                                id="txtDepartamentoIdUpdate">
-                            <option selected>--Seleccionar--</option>
-                            {% for departamento in departamentos %}
-                                <option value="{{ departamento.iddepartamento }}">{{ departamento.nombre }}</option>
-                            {% endfor %}
-                        </select>
+                 <div class="col-md-6">
+                        <label>Descripcion</label>
+                        <input id="txtDescripcionArticulosUpdate"
+                               autofocus type="text"
+                               data-validation="required"
+                               data-validation-error-msg="Descripcion es un campo requerido"
+                               autocomplete="off"
+                               class="form-control" />
                     </div>
-
 
                     <div class="col-md-6 mt-2">
-                      <label>Estado</label>
-                      <input id="txtEstadoEmpleadoUpdate" 
-                             class="form-check-input"
-                             type="checkbox"
-                             data-validation="required"    
-                             data-validation-error-msg="Estados es un campo requerido"    
-                             class="form-control" />
+                      <label>Marca:</label>
+                      <select class="form-select"
+                              name="txtMarcaArticulosUpdate"
+                              data-validation="required"
+                              data-validation-error-msg="Marca es un campo requerido"
+                              id="txtMarcaArticulosUpdate">
+                          <option selected>--Seleccionar--</option>
+                          {% for marca in listado_marcas %}
+                              <option value="{{ marca.idmarca }}">{{ marca.descripcion }}</option>
+                          {% endfor %}
+                      </select>
                   </div>
 
+                  <div class="col-md-6 mt-2">
+                    <label>Unidad Medida:</label>
+                    <select class="form-select"
+                            name="txtUnidadMedidaArticulosUpdate"
+                            data-validation="required"
+                            data-validation-error-msg="Marca es un campo requerido"
+                            id="txtUnidadMedidaArticulosUpdate">
+                        <option selected>--Seleccionar--</option>
+                        {% for unidad in listado_unidad_medida %}
+                            <option value="{{ unidad.idunidadmedida }}">{{ unidad.descripcion }}</option>
+                        {% endfor %}
+                    </select>
+  
+               </div>
 
-                        
-                    </div>
-                </div>
-            </div>
-              <div class="modal-footer">
-                  <button type="button" onclick="updateEmployees()" class="btn btn-primary" id="myButtonUpdate">Guardar</button>
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                 
+              <div class="col-md-6">
+                <label>Cantidad</label>
+                <input id="txtExistenciaArticulosUpdate"
+                       autofocus type="number"
+                       data-validation="required"
+                       data-validation-error-msg="Cantidad es un campo requerido"
+                       autocomplete="off"
+                       class="form-control" />
               </div>
+
+             <div class="col-md-6 mt-2">
+              <label>Estado</label>
+              <input id="txtEstadoArticuloUpdate" 
+                     class="form-check-input"
+                     type="checkbox"
+                     data-validation="required"    
+                     data-validation-error-msg="Estados es un campo requerido"    
+                     autocomplete="off"
+                     class="form-control" />
+              </div>
+  
+       </div>
+    </div>
+</div>
+
+
+                <div class="modal-footer">
+                    <button type="button" onclick="updateArticle()" class="btn btn-primary" id="myButtonUpdateArticle">Guardar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
           </div>
       </div>
   </div>   
@@ -290,11 +305,12 @@
 
           <td>
             <button 
-              onclick="getEmployeesUpdate(' {{ empleado.idempleado }}',
-                                           '{{ empleado.cedula }}',
-                                           '{{ empleado.nombre }}',
-                                           '{{ empleado.departamento.iddepartamento }}',
-                                           '{{ empleado.estado }}')"
+              onclick="getArticleUpdateForm('{{ articulo.idarticulo }}',
+                                            '{{ articulo.descripcion }}',
+                                            '{{ articulo.marca.idmarca }}',
+                                            '{{ articulo.unidadmedida.idunidadmedida }}',
+                                            '{{ articulo.existencia }}',
+                                            '{{ articulo.estado }}')"
               class="btn btn-info btn-sm">
                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
