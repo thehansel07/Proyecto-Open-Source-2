@@ -130,7 +130,7 @@ function saveArticleNewDos() {
 
 }
 
-function saveArticleNew() {
+function saveRecordArticle() {
   const element = document.getElementById("myButtonAddingArticle");
   let descripcion = document.getElementById("txtDescripcionArticulos").value;
   let unidadMedida = document.getElementById("txtUnidadMedidaArticulos").value;
@@ -152,27 +152,27 @@ function saveArticleNew() {
         txtExistenciaArticulos: existencia,
         txtMarcaArticulos: marca,
         txtEstadoArticulo: estado,
-        csrfmiddlewaretoken: csrftoken
+        csrfmiddlewaretoken: csrftoken,
       },
       beforeSend: function () {
         $("#loader").fadeIn();
       },
       success: function (data) {
         document.getElementById("txtDescripcionArticulos").value = "";
-        document.getElementById("txtUnidadMedidaArticulos").value = "";
+        document.getElementById("txtUnidadMedidaArticulos").value ="";
         document.getElementById("txtMarcaArticulos").value = "";
-        document.getElementById("txtExistenciaArticulos").value = "";
-        document.getElementById("txtEstadoArticulo").checked == true? "1": "0";
+        document.getElementById("txtExistenciaArticulos").value= "";
+        document.getElementById("txtEstadoArticulo").checked = false
         setTimeout(function () {
           $("#loader").fadeOut();
-
+  
           Swal.fire({
             position: "center",
             icon: "success",
             title: "Articulo Agregado correctamente...",
             showConfirmButton: false,
           });
-
+  
           setTimeout(function () {
             location.reload();
           }, 3000);
@@ -197,17 +197,15 @@ function ValidateArticle(descripcion,unidadMedida,marca,existencia,estado,type)
 {
 
   if (type == 0) {
-    if (
-      descripcion == "" ||
-      descripcion == "undefined" ||
-      descripcion == null
-    ) {
-      Swal.fire({
-        icon: "warning",
-        title: "Oops...",
-        text: "Favor de colocar la descripcion",
-      });
 
+    if (descripcion == "" || descripcion == "undefined" || descripcion == null) 
+    {
+        Swal.fire({
+          icon: "warning",
+          title: "Oops...",
+          text: "Favor de colocar la descripcion",
+        });
+  
       return false;
     }
 
@@ -254,19 +252,22 @@ function ValidateArticle(descripcion,unidadMedida,marca,existencia,estado,type)
 
       return false;
     }
-  } else {
-    if (Math.sign(existencia) == -1 || existencia == 0) {
-      Swal.fire({
-        icon: "warning",
-        title: "Oops...",
-        text: "Favor de colocar cantidad valida, no se acepta 0 ni valor negativo...",
-      });
+  } 
+  else 
+  {
+    if (Math.sign(existencia) == -1 || existencia == 0) 
+      {
+         Swal.fire({
+           icon: "warning",
+           title: "Oops...",
+           text: "Favor de colocar cantidad valida, no se acepta 0 ni valor negativo...",
+         });
 
       return false;
     }
-
-    return true;
   }
+
+  return true;
 }
 
 function getCookie(name) {
