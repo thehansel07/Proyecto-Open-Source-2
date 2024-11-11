@@ -97,7 +97,7 @@ function printReport() {
 function saveRecord() {
   const element = document.getElementById("myButton");
   var nombre = document.getElementById("txtNombreDepartamento").value;
-  var estado = document.getElementById("txtEstadoDepartamento").checked;
+  var estado = document.getElementById("txtEstadoDepartamento").checked == true ? "1" : "0";;
   const csrftoken = getCookie("csrftoken");
 
   let validate = ValidateDepartaments(nombre, estado);

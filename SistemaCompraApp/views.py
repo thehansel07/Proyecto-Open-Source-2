@@ -112,8 +112,30 @@ def principalMarcas(request):
     })
 
 def principalUnidadesdeMedida(request):
-    listadoUnidades = UnidadesMedida.objects.all()
-    return render(request, 'principalUnidadesdeMedida.html', {'unidades': listadoUnidades})
+    query = request.GET.get('q', '')
+    lista_unidades_medidas = UnidadesMedida.objects.all()
+
+    if query != '':
+        lista_unidades_medidas = lista_unidades_medidas.filter(descripcion=query) 
+        query = ''
+
+    paginator = Paginator(lista_unidades_medidas, 5) 
+
+    page_number = request.GET.get('page')
+
+    try:
+        lista_unidades_medidas = paginator.page(page_number)
+
+    except PageNotAnInteger:
+        lista_unidades_medidas = paginator.page(1)
+
+    except EmptyPage:
+        lista_unidades_medidas = paginator.page(paginator.num_pages)
+
+    return render(request, 'principalUnidadesdeMedida.html', {
+        'page_obj': lista_unidades_medidas,
+        'query': query,
+    })
 
 
 def principalProveedores(request):
@@ -198,11 +220,6 @@ def registrarArticulo(request):
     instance_unidadMedida = UnidadesMedida.objects.get(
         idunidadmedida=id_unidadmedida)
 
-    # Valid if estado is on or off#
-    if estado == 'on':
-        estado = 1
-    else:
-        estado = 0
 
     Articulos.objects.create(descripcion=descripcion,
                              marca=instance_marca,
@@ -219,11 +236,6 @@ def registrarMarcas(request):
     descripcion = request.POST['txtdescripcionMarca']
     estado = request.POST['txtEstadoMarca']
 
-    if estado:
-        estado = 1
-    else:
-        estado = 0
-
     Marcas.objects.create(descripcion=descripcion, estado=estado)
 
     return redirect('/principalMarcas')
@@ -234,14 +246,7 @@ def registrarEmpleado(request):
     nombre = request.POST['txtEmpleadoNombre']
     estado = request.POST['txtEmpleadoEstado']
     iddepartamento = request.POST['txtDepartamentoId']
-    
-    
-    #Valid if estado is on or off#
-    if estado:
-        estado = 1
-    else:
-        estado = 0
-    
+
     intance_Departamento = Departamentos.objects.get(iddepartamento=iddepartamento)
 
     Empleados.objects.create(cedula=cedula,
@@ -286,14 +291,7 @@ def registrarEmpleado(request):
 def registrarUnidadesdeMedida(request):
     descripcion = request.POST['txtdescripcionUnidadesdeMedida']
     estado = request.POST['txtEstadoUnidadesdeMedida']
-
-    # Valid if estado is on or off#
-    if estado == 'on':
-        estado = 1
-    else:
-        estado = 0
-
-    UnidadesMedida.objects.create(descripcion=descripcion, estado=estado)
+    UnidadesMedida.objects.create(descripcion=descripcion,estado=estado)
     sweetify.success(request, 'Unidad Medida Agregada Correctamente!!!')
 
     return redirect('/principalUnidadesdeMedida')
@@ -449,17 +447,7 @@ def editarProveedor(request):
 def editarUnidades(request):
     idunidadmedida = request.POST['txtIdunidad']
     descripcion = request.POST['txtdescripcionUnidadesdeMedida']
-
-    if 'txtEstadoUnidadesdeMedida' in request.POST:
-        estado = request.POST['txtEstadoUnidadesdeMedida']
-    else:
-        estado = '0'
-
-    # Valid if estado is on or off#
-    if estado == 'on':
-        estado = 1
-    else:
-        estado = 0
+    estado= request.POST['txtEstadoUnidadesdeMedida']
 
     unidad = UnidadesMedida.objects.get(idunidadmedida=idunidadmedida)
     unidad.descripcion = descripcion
@@ -790,6 +778,75 @@ def generateReportBrand(request):
     # Devolver la respuesta con el PDF como un archivo adjunto
     return FileResponse(buffer, as_attachment=True, filename="reporteMarcas.pdf")
 
+
+def generateReportMeasurement(request):
+    # Obtén todos los departamentos
+    unidades = UnidadesMedida.objects.all()
+
+    # Preparar los datos para la tabla
+    data = []
+    # Encabezado de la tabla
+    data.append(['ID Marca', 'Nombre', 'Estado'])
+
+    for unidad in unidades:
+        # Definir el estado de forma legible (Activo/Inactivo)
+        if unidad.estado == "1":
+            estado = "Activo"
+
+        else:
+            estado = "Inactivo"
+
+        # Añadir la fila con los datos del departamento
+        data.append([unidad.idunidadmedida, unidad.descripcion, estado])
+
+    # Crear un buffer en memoria para almacenar el PDF
+    buffer = io.BytesIO()
+
+    # Crear el documento PDF
+    document = SimpleDocTemplate(buffer, pagesize=letter)
+
+    # Crear el estilo para el título
+    styles = getSampleStyleSheet()
+    # Usamos un estilo predefinido para el título
+    title_style = styles['Title']
+
+    # Crear el título como un párrafo (esto nos permite formatearlo fácilmente)
+    title = Paragraph("Reporte de Unidades de Medidas", title_style)
+
+    # Crear la tabla
+    table = Table(data)
+
+    # Estilo de la tabla
+    style = TableStyle([
+        # Fondo gris para el encabezado
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        # Texto blanco para el encabezado
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        # Centrar texto en todas las celdas
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        # Usar Helvetica en negrita para el encabezado
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        # Usar Helvetica normal para el cuerpo
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        # Espaciado debajo del encabezado
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Rejilla de la tabla
+    ])
+
+    # Asignar el estilo a la tabla
+    table.setStyle(style)
+
+    # Elementos del documento (agregar el título y la tabla)
+    elements = [title, table]
+
+    # Construir el PDF en el buffer
+    document.build(elements)
+
+    # Hacer que el cursor del buffer esté al principio
+    buffer.seek(0)
+
+    # Devolver la respuesta con el PDF como un archivo adjunto
+    return FileResponse(buffer, as_attachment=True, filename="reporteUnidadMedida.pdf")
 
 
 

@@ -110,7 +110,7 @@ function saveEmployees() {
   let nombre = document.getElementById("txtNombreEmpleado").value;
   let cedula = document.getElementById("txtCedulaEmpleado").value;
   let iddepartamento = document.getElementById("txtDepartamentoId").value;
-  let estado = document.getElementById("txtEstadoDepartamento").checked;
+  let estado = document.getElementById("txtEstadoEmpleado").checked == true ? "1" : "0";;
   const csrftoken = getCookie("csrftoken");
 
   let validate = ValidateEmployees(cedula, nombre, iddepartamento, estado, 0);
@@ -134,7 +134,7 @@ function saveEmployees() {
         document.getElementById("txtNombreEmpleado").value= "";
         document.getElementById("txtCedulaEmpleado").value ="";
         document.getElementById("txtDepartamentoId").value = "";
-        document.getElementById("txtEstadoDepartamento").checked= false;
+        document.getElementById("txtEstadoEmpleado").checked= false;
         setTimeout(function () {
           $("#loader").fadeOut();
 
@@ -226,8 +226,6 @@ function ValidateEmployees(cedula, nombre, iddepartamento, estado, type) {
     
         return false;
       }
-    
-    
       if (iddepartamento == "" || iddepartamento == "undefined" || iddepartamento == null) {
         Swal.fire({
           icon: "warning",

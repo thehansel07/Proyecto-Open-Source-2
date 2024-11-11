@@ -1,64 +1,44 @@
-(function (){
-
-    const btnEliminacion = document.querySelectorAll('.btnEliminacion');
-       btnEliminacion.forEach(btn=>{
-          btn.addEventListener('click', (e)=>{
-          const confirmacion = confirm('Estas seguro que desea eliminar este registro?');
-        if (!confirmacion){
-            e.preventDefault();
-        }
-    });
-});
-})();
-
-
-
-
-
-
-
-function getAddBrandForm() {
-    $("#builtBrandAdd").modal("show");
+function getAddMeasurementForm() {
+    $("#builtMeasurementAdd").modal("show");
   }
   
-  function getBrandUpdate(id, descripcion, estado) 
-  {
-    $("#builtBrandUpdate").modal("show");
-    document.getElementById("txtIdMarcaUpdate").value = id;
-    document.getElementById("txtdescripcionMarcaUpdate").value = descripcion;
-    document.getElementById("txtEstadoMarcaUpdate").checked = estado == "1" ? true : false;
+  function getMeasurementUpdate(id, descripcion, estado) {
+    $("#builtMeasurementUpdate").modal("show");
+    document.getElementById("txtIdunidadUpdate").value = id;
+    document.getElementById("txtdescripcionUnidadesdeMedidaUpdate").value = descripcion;
+    document.getElementById("txtEstadoUnidadesdeMedidaUpdate").checked = estado == "1" ? true : false;
   }
   
-  function updateBrand() {
-    const element = document.getElementById("myButtonUpdateBrand");
-    let id = document.getElementById("txtIdMarcaUpdate").value;
-    let descripcion = document.getElementById("txtdescripcionMarcaUpdate").value;
-    let estado = document.getElementById("txtEstadoMarcaUpdate").checked == true ? 1: 0;
+  function updateMeasurement() {
+    const element = document.getElementById("myButtonUpdateMesurement");
+    let id = document.getElementById("txtIdunidadUpdate").value;
+    let descripcion = document.getElementById("txtdescripcionUnidadesdeMedidaUpdate").value;
+    let estado =document.getElementById("txtEstadoUnidadesdeMedidaUpdate").checked == true ? 1: 0;
     const csrftoken = getCookie("csrftoken");
   
     element.setAttribute("data-dismiss", "modal");
     $.ajax({
       type: "POST",
-      url: "/editarMarcas/",
+      url: "/editarUnidades/",
       data: {
-        txtIdmarca: id,
-        txtdescripcionMarca: descripcion,
-        txtEstadoMarcas: estado,
+        txtIdunidad: id,
+        txtdescripcionUnidadesdeMedida: descripcion,
+        txtEstadoUnidadesdeMedida: estado,
         csrfmiddlewaretoken: csrftoken,
       },
       beforeSend: function () {
         $("#loader").fadeIn();
       },
       success: function (data) {
-        document.getElementById("txtdescripcionMarcaUpdate").value = "";
-        document.getElementById("txtEstadoMarcaUpdate").checked = false;
+        document.getElementById("txtdescripcionUnidadesdeMedidaUpdate").value = "";
+        document.getElementById("txtEstadoUnidadesdeMedidaUpdate").checked = false;
         setTimeout(function () {
           $("#loader").fadeOut();
   
           Swal.fire({
             position: "center",
             icon: "success",
-            title: "Marca Actualizando correctamente...",
+            title: "Departamento Actualizando correctamente...",
             showConfirmButton: false,
           });
   
@@ -111,37 +91,37 @@ function getAddBrandForm() {
     });
   }
   
-  function saveBrandRecord() {
-    const element = document.getElementById("myButtonBrand");
-    var descripcion = document.getElementById("txtdescripcionMarca").value;
-    var estado = document.getElementById("txtEstadoMarca").checked == true ? "1" : "0";;
+  function saveMeasurementRecord() {
+    const element = document.getElementById("myButtonMeasurement");
+    var descripcion = document.getElementById("txtdescripcionUnidadesdeMedida").value;
+    var estado = document.getElementById("txtEstadoUnidadesdeMedida").checked == true ? 1 : 0;
     const csrftoken = getCookie("csrftoken");
   
-    let validate = ValidateBrand(descripcion, estado);
+    let validate = ValidateMeasurement(descripcion, estado);
   
     if (validate) {
       element.setAttribute("data-dismiss", "modal");
       $.ajax({
         type: "POST",
-        url: "/registrarMarcas/",
+        url: "/registrarUnidadesdeMedida/",
         data: {
-            txtdescripcionMarca: descripcion,
-            txtEstadoMarca: estado,
-            csrfmiddlewaretoken: csrftoken,
+          txtdescripcionUnidadesdeMedida: descripcion,
+          txtEstadoUnidadesdeMedida: estado,
+          csrfmiddlewaretoken: csrftoken,
         },
         beforeSend: function () {
           $("#loader").fadeIn();
         },
         success: function (data) {
-          document.getElementById("txtdescripcionMarca").value = "";
-          document.getElementById("txtEstadoMarca").checked = false;
+            document.getElementById("txtdescripcionUnidadesdeMedida").value = "";
+            document.getElementById("txtEstadoUnidadesdeMedida").checked = false;
           setTimeout(function () {
             $("#loader").fadeOut();
     
             Swal.fire({
               position: "center",
               icon: "success",
-              title: "Marca Agregada correctamente...",
+              title: "Unidad de Medida Agregada correctamente...",
               showConfirmButton: false,
             });
     
@@ -165,12 +145,12 @@ function getAddBrandForm() {
     }
   }
   
-  function ValidateBrand(descripcion, estado) {
+  function ValidateMeasurement(descripcion, estado) {
     if (descripcion == "" || descripcion == "undefined" || descripcion == null) {
       Swal.fire({
         icon: "warning",
         title: "Oops...",
-        text: "Favor de colocar la descripcion",
+        text: "Favor de colocar el nombre",
       });
   
       return false;
