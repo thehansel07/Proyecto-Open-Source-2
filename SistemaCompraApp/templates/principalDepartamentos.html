@@ -8,6 +8,8 @@
 
 {% block body %}
 
+
+<!-- Start Agregar Section -->
 <div class="container mt-5">
   <button class="btn btn-success mb-3 rounded-pill"
           onclick="getBuiltyUpdateForm()">
@@ -69,11 +71,12 @@
     </div>   
 </div>
 
+<!-- End Agregar Section -->
 
 
-  
+<!-- Start Actualizar Section -->
 <div class="container"> 
-  <div class="modal fade" role="dialog" id="builtUpdateDepartment" style="margin-left:0px">
+  <div class="modal fade" role="dialog" id="builtUpdateBrand" style="margin-left:0px">
       <div class="modal-dialog modal-lg">
           <div class="modal-content">
               <div class="modal-header">
@@ -91,35 +94,35 @@
 
                         <div class="col-md-6">
                           <label>ID</label>
-                          <input id="txtIdDepartamentoUpdate"
+                          <input id="txtIdMarcaUpdate"
                                  autofocus type="text"
                                  data-validation="required"
-                                 data-validation-error-msg="Builty number is required"
+                                 data-validation-error-msg="El campo id es requerido"
                                  autocomplete="off"
                                  class="form-control" 
                                  disabled/>
-                      </div>
-  
-                          <div class="col-md-6">
-                              <label>Nombre</label>
-                              <input id="txtNombreDepartamentoUpdate"
-                                     autofocus type="text"
-                                     data-validation="required"
-                                     data-validation-error-msg="Builty number is required"
-                                     autocomplete="off"
-                                     class="form-control" />
-                          </div>
-
-                          <div class="col-md-6 mt-2">
-                            <label>Estado</label>
-                            <input id="txtEstadoDepartamentoUpdate" 
-                                   class="form-check-input"
-                                   type="checkbox"
-                                   data-validation="required"    
-                                   data-validation-error-msg="Builty number is required"    
-                                   autocomplete="off"
-                                   class="form-control" />
                         </div>
+  
+                      <div class="col-md-6">
+                        <label>Nombre</label>
+                        <input id="txtdescripcionMarcaUpdate"
+                               autofocus type="text"
+                               data-validation="required"
+                               data-validation-error-msg="El campo Nombre es requerido"
+                               autocomplete="off"
+                               class="form-control" />
+                       </div>
+
+                    <div class="col-md-6 mt-2">
+                      <label>Estado</label>
+                      <input id="txtEstadoMarcaUpdate" 
+                             class="form-check-input"
+                             type="checkbox"
+                             data-validation="required"    
+                             data-validation-error-msg="El campo Marca es requerido"    
+                             autocomplete="off"
+                             class="form-control" />
+                    </div>
 
                       </div>
                   </div>
@@ -132,12 +135,13 @@
       </div>
   </div>   
 </div>
+<!-- End Actualizar Section -->
 
+
+
+    <!-- Start Buscador -->
 
   <div class="d-flex flex-row-reverse">
-
-
-    <!-- Buscador -->
     <form action="/principalDepartamentos" method="get">
 
           <input 
@@ -175,8 +179,12 @@
   
   </div>
 
- 
+  <!-- End Buscador -->
 
+
+
+
+  <!-- Start Tabla de registros -->
 
   <div class="table-responsive">
     <table class="table">
@@ -234,7 +242,10 @@
     </table>
   </div>
 
-  <!-- Paginacion -->
+    <!-- Start Tabla de registros -->
+
+
+  <!-- Start Paginacion -->
 
   <nav aria-label="Page navigation" class="mt-1">
       <ul class="pagination justify-content-end">
@@ -271,7 +282,7 @@
   </nav>
 </div>
 
-  <!-- Paginacion -->
+  <!-- End Paginacion -->
 
 
 

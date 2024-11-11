@@ -84,16 +84,32 @@ def principalEmpleados(request):
 
 
 
-
-
-
-
-
-
 def principalMarcas(request):
-    listadoMarcas = Marcas.objects.all()
-    return render(request, 'principalMarcas.html', {'marcas': listadoMarcas})
+    query = request.GET.get('q', '')
+    lista_marcas = Marcas.objects.all()
 
+
+    if query != '':
+        lista_marcas = lista_marcas.filter(descripcion=query) 
+        query = ''
+
+    paginator = Paginator(lista_marcas, 5) 
+
+    page_number = request.GET.get('page')
+
+    try:
+        lista_marcas = paginator.page(page_number)
+
+    except PageNotAnInteger:
+        lista_marcas = paginator.page(1)
+
+    except EmptyPage:
+        lista_marcas = paginator.page(paginator.num_pages)
+
+    return render(request, 'principalMarcas.html', {
+        'page_obj': lista_marcas,
+        'query': query,
+    })
 
 def principalUnidadesdeMedida(request):
     listadoUnidades = UnidadesMedida.objects.all()
@@ -203,14 +219,12 @@ def registrarMarcas(request):
     descripcion = request.POST['txtdescripcionMarca']
     estado = request.POST['txtEstadoMarca']
 
-    # Valid if estado is on or off#
-    if estado == 'on':
+    if estado:
         estado = 1
     else:
         estado = 0
 
     Marcas.objects.create(descripcion=descripcion, estado=estado)
-    sweetify.success(request, 'Marcas Agregada Correctamente!!!')
 
     return redirect('/principalMarcas')
 
@@ -343,14 +357,8 @@ def registrarProveedor(request):
 
 
 def eliminarMarcas(request, idmarca):
-    print(request.POST['content'])
-    print(request.POST['nombre'])
-
-    print(idmarca)
-
     marca = Marcas.objects.get(idmarca=idmarca)
     marca.delete()
-    sweetify.success(request, 'Marca Eliminada Correctamente!!!')
     return redirect('/principalMarcas')
 
 
@@ -378,24 +386,12 @@ def eliminarArticulo(request, idarticulo):
 def editarMarcas(request):
     idmarca = request.POST['txtIdmarca']
     descripcion = request.POST['txtdescripcionMarca']
-
-    if 'txtEstadoMarcas' in request.POST:
-        estado = request.POST['txtEstadoMarcas']
-    else:
-        estado = '0'
-
-    # Valid if estado is on or off#
-    if estado == 'on':
-        estado = 1
-    else:
-        estado = 0
+    estado = request.POST['txtEstadoMarcas']
 
     marcas = Marcas.objects.get(idmarca=idmarca)
     marcas.descripcion = descripcion
     marcas.estado = estado
     marcas.save()
-
-    sweetify.success(request, 'Marcas Modificado Correctamente!!!')
 
     return redirect('/principalMarcas')
 
@@ -406,11 +402,6 @@ def editarEmpleado(request):
     cedula = request.POST['txtEmpleadoCedula']
     iddepartamento = request.POST['txtDepartamentoId']
     estado =  request.POST['txtEmpleadoEstado']
-
-    if estado:
-        estado = 1
-    else:
-        estado = 0
 
     #Intance of Department Empleado
     intance_Departamento = Departamentos.objects.get(iddepartamento=iddepartamento)
@@ -725,6 +716,83 @@ def generateReportEmpleados(request):
 
     # Devolver la respuesta con el PDF como un archivo adjunto
     return FileResponse(buffer, as_attachment=True, filename="reporteEmpleados.pdf")
+
+
+
+
+
+def generateReportBrand(request):
+    # Obtén todos los departamentos
+    marcas = Marcas.objects.all()
+
+    # Preparar los datos para la tabla
+    data = []
+    # Encabezado de la tabla
+    data.append(['ID Marca', 'Nombre', 'Estado'])
+
+    for mar in marcas:
+        # Definir el estado de forma legible (Activo/Inactivo)
+        if mar.estado == "1":
+            estado = "Activo"
+
+        else:
+            estado = "Inactivo"
+
+        # Añadir la fila con los datos del departamento
+        data.append([mar.idmarca, mar.descripcion, estado])
+
+    # Crear un buffer en memoria para almacenar el PDF
+    buffer = io.BytesIO()
+
+    # Crear el documento PDF
+    document = SimpleDocTemplate(buffer, pagesize=letter)
+
+    # Crear el estilo para el título
+    styles = getSampleStyleSheet()
+    # Usamos un estilo predefinido para el título
+    title_style = styles['Title']
+
+    # Crear el título como un párrafo (esto nos permite formatearlo fácilmente)
+    title = Paragraph("Reporte de Marcas", title_style)
+
+    # Crear la tabla
+    table = Table(data)
+
+    # Estilo de la tabla
+    style = TableStyle([
+        # Fondo gris para el encabezado
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        # Texto blanco para el encabezado
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        # Centrar texto en todas las celdas
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        # Usar Helvetica en negrita para el encabezado
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        # Usar Helvetica normal para el cuerpo
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        # Espaciado debajo del encabezado
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Rejilla de la tabla
+    ])
+
+    # Asignar el estilo a la tabla
+    table.setStyle(style)
+
+    # Elementos del documento (agregar el título y la tabla)
+    elements = [title, table]
+
+    # Construir el PDF en el buffer
+    document.build(elements)
+
+    # Hacer que el cursor del buffer esté al principio
+    buffer.seek(0)
+
+    # Devolver la respuesta con el PDF como un archivo adjunto
+    return FileResponse(buffer, as_attachment=True, filename="reporteMarcas.pdf")
+
+
+
+
 
 
 

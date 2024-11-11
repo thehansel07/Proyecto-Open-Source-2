@@ -18,10 +18,10 @@ function updateEmployees() {
     let nombre = document.getElementById("txtNombreEmpleadoUpdate").value;
     let cedula = document.getElementById("txtCedulaEmpleadoUpdate").value;
     let iddepartamento = document.getElementById("txtDepartamentoIdUpdate").value;
-    let estado = document.getElementById("txtEstadoEmpleadoUpdate").checked;
+    let estado = document.getElementById("txtEstadoEmpleadoUpdate").checked == true ? 1: 0; ;
     const csrftoken = getCookie("csrftoken");
   
-    let validate = ValidateEmployees(cedula, nombre, iddepartamento, estado);
+    let validate = ValidateEmployees(cedula, nombre, iddepartamento, estado, 1);
   
     if (validate) {
       element.setAttribute("data-dismiss", "modal");
@@ -113,7 +113,7 @@ function saveEmployees() {
   let estado = document.getElementById("txtEstadoDepartamento").checked;
   const csrftoken = getCookie("csrftoken");
 
-  let validate = ValidateEmployees(cedula, nombre, iddepartamento, estado);
+  let validate = ValidateEmployees(cedula, nombre, iddepartamento, estado, 0);
 
   if (validate) {
     element.setAttribute("data-dismiss", "modal");
@@ -165,55 +165,80 @@ function saveEmployees() {
   }
 }
 
-function ValidateEmployees(cedula, nombre, iddepartamento, estado) {
-  if (cedula == "" || cedula == "undefined" || cedula == null) {
-    Swal.fire({
-      icon: "warning",
-      title: "Oops...",
-      text: "Favor de colocar la cedula",
-    });
-    return false;
-  } else {
-    if (!validate_cedula(cedula)) {
-      Swal.fire({
-        icon: "warning",
-        title: "Oops...",
-        text: "Cedula inválida favor de revisar y colocar nuevamente!!!",
-      });
-      return false;
+function ValidateEmployees(cedula, nombre, iddepartamento, estado, type) {
+
+    //Si se va actualizar validar si es una cedula valida
+    if(type == 1){
+        if (cedula == "" || cedula == "undefined" || cedula == null) {
+            Swal.fire({
+              icon: "warning",
+              title: "Oops...",
+              text: "Favor de colocar la cedula",
+            });
+            return false;
+          } else {
+            if (!validate_cedula(cedula)) {
+              Swal.fire({
+                icon: "warning",
+                title: "Oops...",
+                text: "Cedula inválida favor de revisar y colocar nuevamente!!!",
+              });
+              return false;
+            }
+          }
     }
-  }
+    else{
 
-  if (nombre == "" || nombre == "undefined" || nombre == null) {
-    Swal.fire({
-      icon: "warning",
-      title: "Oops...",
-      text: "Favor de colocar el nombre",
-    });
+        if (cedula == "" || cedula == "undefined" || cedula == null) {
+            Swal.fire({
+              icon: "warning",
+              title: "Oops...",
+              text: "Favor de colocar la cedula",
+            });
+            return false;
+          } else {
+            if (!validate_cedula(cedula)) {
+              Swal.fire({
+                icon: "warning",
+                title: "Oops...",
+                text: "Cedula inválida favor de revisar y colocar nuevamente!!!",
+              });
+              return false;
+            }
+          }
+    
+      if (nombre == "" || nombre == "undefined" || nombre == null) {
+        Swal.fire({
+          icon: "warning",
+          title: "Oops...",
+          text: "Favor de colocar el nombre",
+        });
+    
+        return false;
+      }
+    
+      if (estado == "" || estado == "undefined" || estado == null) {
+        Swal.fire({
+          icon: "warning",
+          title: "Oops...",
+          text: "Favor de colocar el estado",
+        });
+    
+        return false;
+      }
+    
+    
+      if (iddepartamento == "" || iddepartamento == "undefined" || iddepartamento == null) {
+        Swal.fire({
+          icon: "warning",
+          title: "Oops...",
+          text: "Favor de seleccionar un departamento",
+        });
+    
+        return false;
+      }
 
-    return false;
-  }
-
-  if (estado == "" || estado == "undefined" || estado == null) {
-    Swal.fire({
-      icon: "warning",
-      title: "Oops...",
-      text: "Favor de colocar el estado",
-    });
-
-    return false;
-  }
-
-
-  if (iddepartamento == "" || iddepartamento == "undefined" || iddepartamento == null) {
-    Swal.fire({
-      icon: "warning",
-      title: "Oops...",
-      text: "Favor de seleccionar un departamento",
-    });
-
-    return false;
-  }
+    }
 
   return true;
 }
