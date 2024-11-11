@@ -29,7 +29,7 @@ def principalDepartamentos(request):
 
 
     if query != '':
-        lista_departametos = lista_departametos.filter(nombre=query) 
+        lista_departametos = lista_departametos.filter(nombre__icontains=query) 
         query = ''
 
     paginator = Paginator(lista_departametos, 5) 
@@ -59,7 +59,7 @@ def principalEmpleados(request):
 
 
     if query != '':
-        lista_empleados = lista_empleados.filter(nombre=query) 
+        lista_empleados = lista_empleados.filter(nombre__icontains=query) 
         query = ''
 
 
@@ -90,7 +90,7 @@ def principalMarcas(request):
 
 
     if query != '':
-        lista_marcas = lista_marcas.filter(descripcion=query) 
+        lista_marcas = lista_marcas.filter(descripcion__icontains=query) 
         query = ''
 
     paginator = Paginator(lista_marcas, 5) 
@@ -116,7 +116,7 @@ def principalUnidadesdeMedida(request):
     lista_unidades_medidas = UnidadesMedida.objects.all()
 
     if query != '':
-        lista_unidades_medidas = lista_unidades_medidas.filter(descripcion=query) 
+        lista_unidades_medidas = lista_unidades_medidas.filter(descripcion__icontains=query) 
         query = ''
 
     paginator = Paginator(lista_unidades_medidas, 5) 
@@ -139,8 +139,30 @@ def principalUnidadesdeMedida(request):
 
 
 def principalProveedores(request):
-    listadoProveedor = Proveedores.objects.all()
-    return render(request, 'principalProveedores.html', {'proovedor': listadoProveedor})
+    query = request.GET.get('q', '')
+    lista_proveedores = Proveedores.objects.all()
+
+    if query != '':
+        lista_proveedores = lista_proveedores.filter(nombrecomercial__icontains=query) 
+        query = ''
+
+    paginator = Paginator(lista_proveedores, 5) 
+
+    page_number = request.GET.get('page')
+
+    try:
+        lista_proveedores = paginator.page(page_number)
+
+    except PageNotAnInteger:
+        lista_proveedores = paginator.page(1)
+
+    except EmptyPage:
+        lista_proveedores = paginator.page(paginator.num_pages)
+
+    return render(request, 'principalProveedores.html', {
+        'page_obj': lista_proveedores,
+        'query': query,
+    })
 
 
 def principalArticulos(request):
@@ -341,15 +363,7 @@ def registrarProveedor(request):
     nombrecomercial = request.POST['txtNombreComercialProveedor']
     estado = request.POST['txtEstadoProveedor']
 
-    # Valid if estado is on or off#
-    if estado == 'on':
-        estado = 1
-    else:
-        estado = 0
-
-    Proveedores.objects.create(
-        nombrecomercial=nombrecomercial, cedularnc=cedularnc, estado=estado)
-    sweetify.success(request, 'Marca Agregada Correctamente!!!')
+    Proveedores.objects.create(nombrecomercial=nombrecomercial, cedularnc=cedularnc, estado=estado)
 
     return redirect('/principalProveedores')
 
@@ -370,7 +384,6 @@ def eliminarUnidades(request, idunidadmedida):
 def eliminarProveedor(request, idproveedor):
     proveedor = Proveedores.objects.get(idproveedor=idproveedor)
     proveedor.delete()
-    sweetify.success(request, 'Proveedor Eliminada Correctamente!!!')
     return redirect('/principalProveedores')
 
 
@@ -421,25 +434,13 @@ def editarProveedor(request):
     idproveedor = request.POST['txtIdproveedor']
     cedularnc = request.POST['txtcedulaProveedor']
     nombrecomercial = request.POST['txtNombreComercialProveedor']
-
-    if 'txtEstadoProovedor' in request.POST:
-        estado = request.POST['txtEstadoProveedor']
-    else:
-        estado = '0'
-
-    # Valid if estado is on or off#
-    if estado == 'on':
-        estado = 1
-    else:
-        estado = 0
+    estado = request.POST['txtEstadoProveedor']
 
     proveedor = Proveedores.objects.get(idproveedor=idproveedor)
     proveedor.cedularnc = cedularnc
     proveedor.nombrecomercial = nombrecomercial
     proveedor.estado = estado
     proveedor.save()
-
-    sweetify.success(request, 'Proveedor Modificada Correctamente!!!')
 
     return redirect('/principalProveedores')
 
@@ -538,7 +539,7 @@ def lista_departametos(request):
 
 
     if query != '':
-        lista_departametos = lista_departametos.filter(nombre=query) 
+        lista_departametos = list(filter(lambda d: query.lower() in d['nombre'].lower(), lista_departametos))
         query = ''
 
 
