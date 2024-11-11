@@ -1,128 +1,346 @@
-{% extends "./base.html" %} {% block title %}Sistema de Compras{% endblock %}
-{%block navegacion %}Empleados{% endblock %} {% block body %}
 
-<div class="row">
-  <div class="col-sm-12 col-md-8 col-lg-6 col-xl-11 mb-4">
-    <h4>Gestión de Empleados</h4>
-    <div class="card">
-      <div class="card-body">
-        <form action="/registrarEmpleado/" method="post">
-          {% csrf_token %}
-
-          <div class="form-group mb-3">
-            <label for="txtCedulaEmpleado">Cedula:</label>
-            <input
-              type="text"
-              name="txtEmpleadoCedula"
-              id="txtEmpleadoCedula"
-              class="form-control"
-              placeholder="Cedula"
-              minlength="1"
-              maxlength="11"
-              required
-              pattern="[0-9]+"
-              title="Solo numeros; sin espacios o caracteres especiales"
-            />
-          </div>
-
-          <div class="form-group mb-3"></div>
-            <label for="txtEmpleadoNombre">Nombre:</label>
-            <input
-              type="text"
-              name="txtEmpleadoNombre"
-              id="txtEmpleadoNombre"
-              class="form-control"
-              placeholder="Nombre"
-              minlength="1"
-              maxlength="500"
-              required
-            />
-          </div>
+{% extends "./base.html" %}
 
 
-          <div class="form-group mb-3">
-            <label for="txtDepartamentoId">Departamentos:</label>
-            <select class="form-select"
-                    name="txtDepartamentoId"
-                    id="txtDepartamentoId">
-                <option selected>--Seleccionar--</option>
-                {% for departamento in departamentos %}
-                    <option value="{{ departamento.iddepartamento }}">{{ departamento.nombre }}</option>
-                {% endfor %}
-            </select>
+{% block navegacion %}Gestion de Empleados{%endblock%}
+
+{% block title %} Sistema Gestión de Compras {% endblock %}
+
+{% block body %}
+
+
+
+<!-- Agregando -->
+<div class="container mt-5">
+  <button class="btn btn-success mb-3 rounded-pill"
+          onclick="getEmployeesAddForm()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
+      <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
+    </svg>
+    Agregar
+  </button>
+  
+  
+  <div class="container"> 
+    <div class="modal fade" role="dialog" id="builtEmployeesAdd" style="margin-left:0px">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="border-0" type="button" class="close" data-dismiss="modal">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                      <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                    </svg>
+                  </button>
+                    <h4 class="modal-title">Agregando Empleado</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+
+
+                          <div class="col-md-6">
+                            <label>Cedula</label>
+                            <input id="txtCedulaEmpleado"
+                                   autofocus type="text"
+                                   data-validation="required"
+                                   data-validation-error-msg="Cedula es un campo requerido"
+                                   autocomplete="off"
+                                   class="form-control" />
+                           </div>
+
+    
+                            <div class="col-md-6">
+                                <label>Nombre</label>
+                                <input id="txtNombreEmpleado"
+                                       autofocus type="text"
+                                       data-validation="required"
+                                       data-validation-error-msg="Nombre es un campo requerido"
+                                       autocomplete="off"
+                                       class="form-control" />
+                            </div>
+
+
+                          
+                          <div class="col-md-6 mt-2">
+                            <label for="txtDepartamentoId">Departamentos:</label>
+                            <select class="form-select"
+                                    name="txtDepartamentoId"
+                                    data-validation="required"
+                                    data-validation-error-msg="Departamentos es un campo requerido"
+                                    id="txtDepartamentoId">
+                                <option selected>--Seleccionar--</option>
+                                {% for departamento in departamentos %}
+                                    <option value="{{ departamento.iddepartamento }}">{{ departamento.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+
+                        <div class="col-md-6 mt-2">
+                          <label>Estado</label>
+                          <input id="txtEstadoEmpleado" 
+                                 class="form-check-input"
+                                 type="checkbox"
+                                 data-validation="required"    
+                                 data-validation-error-msg="Estados es un campo requerido"    
+                                 autocomplete="off"
+                                 class="form-control" />
+                      </div>
+
+
+                            
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="saveEmployees()" class="btn btn-primary" id="myButton">Guardar</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
         </div>
-
-          <div class="form-check mb-3">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              name="txtEmpleadoEstado"
-              id="txtEmpleadoEstado"
-              required
-            />
-
-            <label class="form-check-label" for="txtEmpleadoEstado"
-              >Estado</label
-            >
-          </div>
-
-          <div class="d-grid">
-            <button type="submit" class="btn btn-success text-white">
-              Guardar
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-sm-12 col-md-6 col-lg-8 col-xl-8">
-    <h3>Listado de Empleados</h3>
-    <div class="table-responsive py-2">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Cedula</th>
-            <th>Nombre</th>
-            <th>Departamento</th>
-            <th>Estado</th>
-
-            <th colspan="2">Opciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for empleado in empleados %}
-          <tr>
-            <td>{{ empleado.idempleado }}</td>
-            <td>{{ empleado.cedula }}</td>
-            <td>{{empleado.nombre }}</td>
-            <td>{{ empleado.departamento.nombre }}</td>
-            <td>
-              {% if empleado.estado == "1" %}
-              <i class="fa-solid fa-circle-check text-success"></i>
-              {% else %}
-              <i class="fa-regular fa-circle-check text-muted"></i>
-              {% endif %}
-            </td>
-            <td>
-              <a href="edicionEmpleados/{{ empleado.idempleado }}"
-                class="btn btn-info btn-sm"
-                >Editar</a
-              >
-            </td>
-            <td>
-              <a
-                href="eliminarEmpleado/{{ empleado.idempleado }}"
-                class="btn btn-danger btn-sm btnEliminacion"
-                >Eliminar</a
-              >
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
+    </div>   
 </div>
-{% endblock %}
+<!-- Agregando -->
+
+
+
+<!-- Actualizando -->
+  
+<div class="container"> 
+  <div class="modal fade" role="dialog" id="builtUpdateEmployees" style="margin-left:0px">
+      <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+              <div class="modal-header">
+                  <button class="border-0" type="button" class="close" data-dismiss="modal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-x" viewBox="0 0 16 16">
+                    <path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"/>
+                  </svg>
+                </button>
+                  <h4 class="modal-title">Actualizando Empleado</h4>
+              </div>
+              <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+
+                      <div class="col-md-6">
+                        <label>ID</label>
+                        <input id="txtIdEmpleadoUpdate"
+                               autofocus type="text"
+                               data-validation="required"
+                               data-validation-error-msg="Cedula es un campo requerido"
+                               autocomplete="off"
+                               class="form-control" 
+                               disabled/>
+                       </div>
+
+
+                      <div class="col-md-6">
+                        <label>Cedula</label>
+                        <input id="txtCedulaEmpleadoUpdate"
+                               autofocus type="text"
+                               data-validation="required"
+                               data-validation-error-msg="Cedula es un campo requerido"
+                               autocomplete="off"
+                               class="form-control" />
+                       </div>
+
+
+                        <div class="col-md-6">
+                            <label>Nombre</label>
+                            <input id="txtNombreEmpleadoUpdate"
+                                   autofocus type="text"
+                                   data-validation="required"
+                                   data-validation-error-msg="Nombre es un campo requerido"
+                                   autocomplete="off"
+                                   class="form-control" />
+                        </div>
+
+
+                      
+                      <div class="col-md-6 mt-2">
+                        <label for="txtDepartamentoId">Departamentos:</label>
+                        <select class="form-select"
+                                name="txtDepartamentoId"
+                                data-validation="required"
+                                data-validation-error-msg="Departamentos es un campo requerido"
+                                id="txtDepartamentoIdUpdate">
+                            <option selected>--Seleccionar--</option>
+                            {% for departamento in departamentos %}
+                                <option value="{{ departamento.iddepartamento }}">{{ departamento.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+
+                    <div class="col-md-6 mt-2">
+                      <label>Estado</label>
+                      <input id="txtEstadoEmpleadoUpdate" 
+                             class="form-check-input"
+                             type="checkbox"
+                             data-validation="required"    
+                             data-validation-error-msg="Estados es un campo requerido"    
+                             class="form-control" />
+                  </div>
+
+
+                        
+                    </div>
+                </div>
+            </div>
+              <div class="modal-footer">
+                  <button type="button" onclick="updateEmployees()" class="btn btn-primary" id="myButtonUpdate">Guardar</button>
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              </div>
+          </div>
+      </div>
+  </div>   
+</div>
+<!-- Actualizando -->
+
+  <div class="d-flex flex-row-reverse">
+
+
+    <!-- Buscador -->
+    <form action="/principalEmpleados" method="get">
+
+          <input 
+               class="rounded ms-2"
+               name="q"
+               type="search"
+               value="{{ query }}"
+               height="45px"
+               placeholder="Buscar empleados..." 
+               size="15"
+               style="height: 60px;">
+    
+    
+          <button type="submit"
+                  class="btn btn-primary border border-primary">
+                  
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                  </svg>
+          </button>
+
+      
+    </form>
+    
+  <!-- Buscador -->
+
+<!-- Exportar -->
+    <a href="generateReportEmpleados" 
+      class="btn btn-info mb-2 rounded">
+      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-box-arrow-in-down" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M3.5 6a.5.5 0 0 0-.5.5v8a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5v-8a.5.5 0 0 0-.5-.5h-2a.5.5 0 0 1 0-1h2A1.5 1.5 0 0 1 14 6.5v8a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 14.5v-8A1.5 1.5 0 0 1 3.5 5h2a.5.5 0 0 1 0 1z"/>
+          <path fill-rule="evenodd" d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+        </svg>
+          Exportar
+    </a>            
+  
+  </div>
+
+ 
+<!-- Exportar -->
+
+
+  <div class="table-responsive">
+    <table class="table">
+      <thead>
+        <tr class="table-primary">
+          <th>ID</th>
+          <th>Cedula</th>
+          <th>Nombre</th>
+          <th>Departamento</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for empleado in page_obj %}
+        <tr>
+          <td>{{ empleado.idempleado  }}</td>
+          <td>{{ empleado.cedula }}</td>
+          <td>{{ empleado.nombre }}</td>
+          <td>{{ empleado.departamento.nombre }}</td>
+
+          <td>
+            {% if empleado.estado == "1" %}
+            <i class="fa-solid fa-circle-check text-success"></i>
+            {% else %}
+            <i class="fa-regular fa-circle-check text-muted"></i>
+            {% endif %}
+          </td>
+
+          <td>
+            <button 
+              onclick="getEmployeesUpdate(' {{ empleado.idempleado }}',
+                                           '{{ empleado.cedula }}',
+                                           '{{ empleado.nombre }}',
+                                           '{{ empleado.departamento.iddepartamento }}',
+                                           '{{ empleado.estado }}')"
+              class="btn btn-info btn-sm">
+               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                 <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                 <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+               </svg>
+            </button>
+      
+            <a href="eliminarEmpleado/{{ empleado.idempleado }}"
+              class="btn btn-danger btn-sm btnEliminacion">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill" viewBox="0 0 16 16">
+                <path d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"/>
+              </svg>
+            </a>
+
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+
+    </table>
+  </div>
+
+  <!-- Paginacion -->
+
+  <nav aria-label="Page navigation" class="mt-1">
+      <ul class="pagination justify-content-end">
+          {% if page_obj.has_previous %}
+              <li class="page-item">
+                  <a class="page-link" href="?page=1" aria-label="Primera">
+                      <span aria-hidden="true">&laquo;</span>
+                  </a>
+              </li>
+              <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Anterior">
+                      <span aria-hidden="true">&lsaquo;</span>
+                  </a>
+              </li>
+          {% endif %}
+
+          <li class="page-item disabled">
+              <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+          </li>
+
+          {% if page_obj.has_next %}
+              <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Siguiente">
+                      <span aria-hidden="true">&rsaquo;</span>
+                  </a>
+              </li>
+              <li class="page-item">
+                  <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Última">
+                      <span aria-hidden="true">&raquo;</span>
+                  </a>
+              </li>
+          {% endif %}
+      </ul>
+  </nav>
+</div>
+
+  <!-- Paginacion -->
+
+
+
+
+{% endblock body %}

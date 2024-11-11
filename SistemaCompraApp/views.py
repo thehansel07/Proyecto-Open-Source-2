@@ -32,7 +32,6 @@ def principalDepartamentos(request):
         lista_departametos = lista_departametos.filter(nombre=query) 
         query = ''
 
-
     paginator = Paginator(lista_departametos, 5) 
 
     page_number = request.GET.get('page')
@@ -54,13 +53,41 @@ def principalDepartamentos(request):
 
 
 def principalEmpleados(request):
-    empleados = Empleados.objects.all()
-    departamentos = Departamentos.objects.all()
+    query = request.GET.get('q', '')
+    lista_empleados = Empleados.objects.all()
+    lista_departametos = Departamentos.objects.all()
+
+
+    if query != '':
+        lista_empleados = lista_empleados.filter(nombre=query) 
+        query = ''
+
+
+    paginator = Paginator(lista_empleados, 5) 
+
+    page_number = request.GET.get('page')
+
+    try:
+        lista_empleados = paginator.page(page_number)
+
+    except PageNotAnInteger:
+        lista_empleados = paginator.page(1)
+
+    except EmptyPage:
+        lista_empleados = paginator.page(paginator.num_pages)
 
     return render(request, 'principalEmpleados.html', {
-        'empleados': empleados,
-        'departamentos': departamentos
+        'page_obj': lista_empleados,
+        'query': query,
+        'departamentos': lista_departametos
     })
+
+
+
+
+
+
+
 
 
 def principalMarcas(request):
@@ -141,7 +168,7 @@ def registrarDepartamentos(request):
 
     Departamentos.objects.create(nombre=nombre, estado=estado)
 
-    return redirect('/')
+    return redirect('/principalEmpleados')
 
 
 def registrarArticulo(request):
@@ -193,23 +220,25 @@ def registrarEmpleado(request):
     nombre = request.POST['txtEmpleadoNombre']
     estado = request.POST['txtEmpleadoEstado']
     iddepartamento = request.POST['txtDepartamentoId']
-
-    isvalid = validar_cedula(cedula)
-
-    if isvalid:
-        intance_Departamento = Departamentos.objects.get(
-            iddepartamento=iddepartamento)
-        Empleados.objects.create(
-            cedula=cedula, nombre=nombre, departamento=intance_Departamento, estado=estado)
-        sweetify.success(request, 'Empleado agregado correctamente!!!')
+    
+    
+    #Valid if estado is on or off#
+    if estado:
+        estado = 1
     else:
-        sweetify.error(
-            request, 'Cedula subministrada no contiene el formato correspondiente!!')
+        estado = 0
+    
+    intance_Departamento = Departamentos.objects.get(iddepartamento=iddepartamento)
 
+    Empleados.objects.create(cedula=cedula,
+                             nombre=nombre,
+                             departamento=intance_Departamento,
+                             estado=estado)
+        
     return redirect('/principalEmpleados')
 
 
-def validar_cedula(cedula):
+# def validar_cedula(cedula):
   # La cédula debe tener 11 dígitos
     if len(cedula) != 11:
         return False
@@ -292,7 +321,7 @@ def editarDepartamento(request):
     departamento.estado = estado
     departamento.save()
 
-    return redirect('/')
+    return redirect('/principalDepartamentos')
 
 
 def registrarProveedor(request):
@@ -376,19 +405,16 @@ def editarEmpleado(request):
     nombre = request.POST['txtEmpleadoNombre']
     cedula = request.POST['txtEmpleadoCedula']
     iddepartamento = request.POST['txtDepartamentoId']
-    intance_Departamento = Departamentos.objects.get(
-        iddepartamento=iddepartamento)
+    estado =  request.POST['txtEmpleadoEstado']
 
-    if 'txtEmpleadoEstado' in request.POST:
-        estado = request.POST['txtEmpleadoEstado']
-    else:
-        estado = '0'
-
-    # Valid if estado is on or off#
-    if estado == 'on':
+    if estado:
         estado = 1
     else:
         estado = 0
+
+    #Intance of Department Empleado
+    intance_Departamento = Departamentos.objects.get(iddepartamento=iddepartamento)
+
 
     empledo = Empleados.objects.get(idempleado=idempleado)
     empledo.cedula = cedula
@@ -626,6 +652,81 @@ def generateReportDepartment(request):
 
     # Devolver la respuesta con el PDF como un archivo adjunto
     return FileResponse(buffer, as_attachment=True, filename="reporteDepartamentos.pdf")
+
+
+
+
+
+def generateReportEmpleados(request):
+
+    empleados = Empleados.objects.all()
+
+    # Preparar los datos para la tabla
+    data = []
+    # Encabezado de la tabla
+    data.append(['ID Empleados', 'Cedula', 'Nombre','Departamento', 'Estado'])
+
+    for dep in empleados:
+        # Definir el estado de forma legible (Activo/Inactivo)
+        if dep.estado == "1":
+            estado = "Activo"
+
+        else:
+            estado = "Inactivo"
+
+        # Añadir la fila con los datos del departamento
+        data.append([dep.idempleado, dep.cedula, dep.nombre,dep.departamento.nombre, estado])
+
+    # Crear un buffer en memoria para almacenar el PDF
+    buffer = io.BytesIO()
+
+    # Crear el documento PDF
+    document = SimpleDocTemplate(buffer, pagesize=letter)
+
+    # Crear el estilo para el título
+    styles = getSampleStyleSheet()
+    # Usamos un estilo predefinido para el título
+    title_style = styles['Title']
+
+    # Crear el título como un párrafo (esto nos permite formatearlo fácilmente)
+    title = Paragraph("Reporte de Empleados", title_style)
+
+    # Crear la tabla
+    table = Table(data)
+
+    # Estilo de la tabla
+    style = TableStyle([
+        # Fondo gris para el encabezado
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        # Texto blanco para el encabezado
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        # Centrar texto en todas las celdas
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        # Usar Helvetica en negrita para el encabezado
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        # Usar Helvetica normal para el cuerpo
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        # Espaciado debajo del encabezado
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Rejilla de la tabla
+    ])
+
+    # Asignar el estilo a la tabla
+    table.setStyle(style)
+
+    # Elementos del documento (agregar el título y la tabla)
+    elements = [title, table]
+
+    # Construir el PDF en el buffer
+    document.build(elements)
+
+    # Hacer que el cursor del buffer esté al principio
+    buffer.seek(0)
+
+    # Devolver la respuesta con el PDF como un archivo adjunto
+    return FileResponse(buffer, as_attachment=True, filename="reporteEmpleados.pdf")
+
+
 
 
 # def principalDepartamentos(request):
