@@ -16,6 +16,8 @@ urlpatterns = [
     path('generateReportEmpleados',views.generateReportEmpleados, name='generateReportEmpleados'),
     path('generateReportBrand',views.generateReportBrand, name='generateReportBrand'),
     path('generateReportMeasurement',views.generateReportMeasurement, name='generateReportMeasurement'),
+    path('generateReportProvider',views.generateReportProvider, name='generateReportProvider'),
+    path('generateReportArticle',views.generateReportArticle, name='generateReportArticle'),
 
     path('principalDepartamentos',views.principalDepartamentos, name='principalDepartamentos'),
     path('principalEmpleados',views.principalEmpleados),
