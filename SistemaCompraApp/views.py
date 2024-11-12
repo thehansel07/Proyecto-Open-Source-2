@@ -969,7 +969,7 @@ def generateReportArticle(request):
     title_style = styles['Title']
 
     # Crear el título como un párrafo (esto nos permite formatearlo fácilmente)
-    title = Paragraph("Reporte de Unidades De Articulos", title_style)
+    title = Paragraph("Reporte De Articulos", title_style)
 
     # Crear la tabla
     table = Table(data)
