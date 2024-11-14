@@ -13,10 +13,7 @@ function updateDepartment() {
   const element = document.getElementById("myButtonUpdate");
   let id = document.getElementById("txtIdDepartamentoUpdate").value;
   let nombre = document.getElementById("txtNombreDepartamentoUpdate").value;
-  let estado =
-    document.getElementById("txtEstadoDepartamentoUpdate").checked == true
-      ? 1
-      : 0;
+  let estado =document.getElementById("txtEstadoDepartamentoUpdate").checked == true? 1: 0;
   const csrftoken = getCookie("csrftoken");
 
   element.setAttribute("data-dismiss", "modal");
