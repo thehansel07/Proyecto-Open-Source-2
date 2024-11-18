@@ -944,6 +944,78 @@ def generateReportMeasurement(request):
 
 
 
+def generateReportOrder(request):
+    # Obtén todos las orden de compras
+    orden = Ordencompra.objects.all()
+
+    # Preparar los datos para la tabla
+    data = []
+
+    # Encabezado de la tabla
+    data.append(['ID Orden', 'Fecha', 'Articulo', 'Cantidad','Unidad De Medida','Marca','Costo Unitario','Estado'])
+
+    for unidad in orden:
+        # Definir el estado de forma legible (Activo/Inactivo)
+        if unidad.estado == "1":
+            estado = "Activo"
+
+        else:
+            estado = "Inactivo"
+
+        # Añadir la fila con los datos del departamento
+        data.append([unidad.idordencompra,unidad.fecha,unidad.idarticulo.descripcion,unidad.cantidad,unidad.idunidadmedida.descripcion,unidad.idmarca.descripcion, unidad.costounitario, estado])
+
+    # Crear un buffer en memoria para almacenar el PDF
+    buffer = io.BytesIO()
+
+    # Crear el documento PDF
+    document = SimpleDocTemplate(buffer, pagesize=letter)
+
+    # Crear el estilo para el título
+    styles = getSampleStyleSheet()
+    # Usamos un estilo predefinido para el título
+    title_style = styles['Title']
+
+    # Crear el título como un párrafo (esto nos permite formatearlo fácilmente)
+    title = Paragraph("Reporte de Orden De Compra", title_style)
+
+    # Crear la tabla
+    table = Table(data)
+
+    # Estilo de la tabla
+    style = TableStyle([
+        # Fondo gris para el encabezado
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        # Texto blanco para el encabezado
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        # Centrar texto en todas las celdas
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        # Usar Helvetica en negrita para el encabezado
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        # Usar Helvetica normal para el cuerpo
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        # Espaciado debajo del encabezado
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Rejilla de la tabla
+    ])
+
+    # Asignar el estilo a la tabla
+    table.setStyle(style)
+
+    # Elementos del documento (agregar el título y la tabla)
+    elements = [title, table]
+
+    # Construir el PDF en el buffer
+    document.build(elements)
+
+    # Hacer que el cursor del buffer esté al principio
+    buffer.seek(0)
+
+    # Devolver la respuesta con el PDF como un archivo adjunto
+    return FileResponse(buffer, as_attachment=True, filename="reporteOrdenCompra.pdf")
+
+
+
 
 def generateReportProvider(request):
     # Obtén todos los departamentos
