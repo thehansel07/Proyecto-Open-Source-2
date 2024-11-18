@@ -7,8 +7,8 @@ from SistemaCompraApp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index1',views.index1, name='index1'),
-    path('',views.index, name='index'),
+    path('',views.index1, name='index1'),
+    path('index',views.index, name='index'),
 
 
     # Section of report
@@ -26,6 +26,7 @@ urlpatterns = [
     path('principalUnidadesdeMedida', views.principalUnidadesdeMedida, name='principalUnidadesdeMedida'),
     path('principalProveedores', views.principalProveedores, name='principalProveedores'),
     path('lista_departametos', views.lista_departametos, name='lista_departametos'),
+    path('principalOrdenCompra', views.principalOrdenCompra, name='principalOrdenCompra'),
 
 
 
@@ -47,6 +48,7 @@ urlpatterns = [
     path('eliminarEmpleado/<idempleado>',views.eliminarEmpleado, name='eliminarEmpleado'),
     path('eliminarDepartamento/<iddepartamento>',views.eliminarDepartamento, name='eliminarDepartamento'),
     path('eliminarArticulo/<idarticulo>',views.eliminarArticulo, name='eliminarArticulo'),
+    path('eliminarOrdenCompra/<idordencompra>',views.eliminarOrdenCompra, name='eliminarOrdenCompra'),
 
 
 
@@ -54,6 +56,7 @@ urlpatterns = [
     path('registrarMarcas/', views.registrarMarcas, name='registrarMarcas'),
     path('registrarUnidadesdeMedida/', views.registrarUnidadesdeMedida, name='registrarUnidadesdeMedida'),
     path('registrarProveedor/', views.registrarProveedor, name='registrarProveedor'),
+    path('registrarOrdenCompra/', views.registrarOrdenCompra, name='registrarOrdenCompra'),
 
     path('eliminarMarcas/<idmarca>', views.eliminarMarcas, name='eliminarMarcas'),
     path('eliminarUnidades/<idunidadmedida>', views.eliminarUnidades, name='eliminarUnidades'),

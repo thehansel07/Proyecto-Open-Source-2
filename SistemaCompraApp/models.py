@@ -69,6 +69,24 @@ class UnidadesMedida(models.Model):
         db_table = 'Unidades_Medida'
 
 
+
+
+class Ordencompra(models.Model):
+    idordencompra = models.AutoField(db_column='IdOrdenCompra', primary_key=True, blank=False, null=False)  # Field name made lowercase.
+    idsolicitud = models.IntegerField(db_column='IdSolicitud', blank=True, null=True)  # Field name made lowercase.
+    fecha = models.DateField(db_column='Fecha')  # Field name made lowercase.
+    idarticulo = models.ForeignKey(Articulos, models.DO_NOTHING, db_column='IdArticulo')  # Field name made lowercase.
+    cantidad = models.IntegerField(db_column='Cantidad')  # Field name made lowercase.
+    idunidadmedida = models.ForeignKey('UnidadesMedida', models.DO_NOTHING, db_column='IdUnidadMedida')  # Field name made lowercase.
+    idmarca = models.ForeignKey(Marcas, models.DO_NOTHING, db_column='IdMarca')  # Field name made lowercase.
+    costounitario = models.IntegerField(db_column='CostoUnitario', blank=True, null=True)  # Field name made lowercase.
+    estado = models.TextField(db_column='Estado')  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'OrdenCompra'
+
+
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
 

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Departamentos, Empleados, Marcas, UnidadesMedida, Proveedores, Articulos
+from .models import Departamentos, Empleados, Marcas, UnidadesMedida, Proveedores, Articulos, Ordencompra
 import sweetify  # type: ignore
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth.models import User
@@ -15,6 +15,8 @@ from reportlab.lib import colors
 from reportlab.pdfgen import canvas
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
+from datetime import datetime
+
 
 # Create your views here.
 
@@ -49,6 +51,47 @@ def principalDepartamentos(request):
         'page_obj': lista_departametos,
         'query': query
     })
+
+
+def principalOrdenCompra(request):
+    query = request.GET.get('q', '')
+
+
+    if(query != ''):
+            query_date = datetime.strptime(query, "%Y-%m-%d").date()
+
+
+    lista_OrdenCompra = Ordencompra.objects.all()
+    listado_articulos = Articulos.objects.all()
+    listado_marcas = Marcas.objects.all()
+    listado_unidad_medida= UnidadesMedida.objects.all()
+
+
+    if query != '':
+        lista_OrdenCompra = list(filter(lambda x: x.fecha <= query_date, lista_OrdenCompra))
+        query = ''
+
+    paginator = Paginator(lista_OrdenCompra, 5) 
+
+    page_number = request.GET.get('page')
+
+    try:
+        lista_OrdenCompra = paginator.page(page_number)
+
+    except PageNotAnInteger:
+        lista_OrdenCompra = paginator.page(1)
+
+    except EmptyPage:
+        lista_OrdenCompra = paginator.page(paginator.num_pages)
+
+    return render(request, 'principalOrdenCompra.html', {
+        'page_obj': lista_OrdenCompra,
+        'query': query,
+        'listado_articulos': listado_articulos,
+        'listado_marcas': listado_marcas,
+        'listado_unidad_medida': listado_unidad_medida
+    })
+
 
 
 
@@ -261,8 +304,6 @@ def registrarArticulo(request):
                              existencia=existencia,
                              estado=estado)
 
-    sweetify.success(request, 'Articulo Agregado Correctamente!!!')
-
     return redirect('/principalArticulos')
 
 
@@ -331,11 +372,51 @@ def registrarUnidadesdeMedida(request):
     return redirect('/principalUnidadesdeMedida')
 
 
+
+def registrarOrdenCompra(request):
+    fecha = request.POST['txtOrdenFecha']
+    idArticulo = request.POST['txtOrdenArticuloId']
+    cantidad = request.POST['txtOrdenCantidad']
+    idUnidadMedida = request.POST['txtOrdenUnidadMedida']
+    costoUnitario = request.POST['txtOrdenCostoUnitario']
+    idMarca = request.POST['txtOrdenMarcaId']
+    estado = request.POST['txtOrdenEstado']
+
+    instance_marca = Marcas.objects.get(idmarca=idMarca)
+    instance_unidad_medida = UnidadesMedida.objects.get(idunidadmedida=idUnidadMedida)
+    instance_articulo = Articulos.objects.get(idarticulo=idArticulo)
+
+
+
+    Ordencompra.objects.create(fecha=fecha,
+                              idarticulo = instance_articulo,
+                              cantidad = cantidad,
+                              idunidadmedida= instance_unidad_medida,
+                              idmarca = instance_marca,
+                              costounitario = costoUnitario,
+                              estado=estado)
+    
+
+    existencia = int(instance_articulo.existencia) + int(cantidad)
+    instance_articulo.existencia = existencia
+    instance_articulo.save()
+
+    return redirect('/principalOrdenCompra')
+
+
 def eliminarDepartamento(request, iddepartamento):
     departamentos = Departamentos.objects.get(iddepartamento=iddepartamento)
     departamentos.delete()
     sweetify.success(request, 'Departamento Eliminado Correctamente!!!')
     return redirect('/lista_departametos')
+
+
+def eliminarOrdenCompra(request, idordencompra):
+    departamentos = Ordencompra.objects.get(idordencompra=idordencompra)
+    departamentos.delete()
+    sweetify.success(request, 'Orden De Compra Eliminada Correctamente!!!')
+    return redirect('/principalOrdenCompra')
+
 
 
 def eliminarEmpleado(request, idempleado):
@@ -499,7 +580,7 @@ def signup(request):
                                                 password=request.POST['password1'])
                 user.save()
                 login(request, user)
-                return redirect('/')
+                return redirect('/index')
             except IntegrityError:
                 return render(request, 'signup.html', {
                     'form': UserCreationForm,
@@ -535,7 +616,7 @@ def signin(request):
 
         else:
             login(request, user)
-            return redirect('/')
+            return redirect('/index')
 
 
 def index1(request):
